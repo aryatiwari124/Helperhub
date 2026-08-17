@@ -21,4 +21,8 @@ const hireRequestSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+hireRequestSchema.index({ recruiterId: 1, createdAt: -1 });
+hireRequestSchema.index({ helperId: 1, createdAt: -1 });
+hireRequestSchema.index({ status: 1 });
+
 module.exports = mongoose.model('HireRequest', hireRequestSchema);

@@ -143,19 +143,19 @@ export default function WorkerCard({ profile, index = 0, selected, onSelect, onB
           background: #2EC4B6; border: 2px solid white;
         }
         .wc-info { flex: 1; }
-        .wc-name { font-size: 16px; font-weight: 800; color: #2B2B2B; font-family: 'Poppins',sans-serif; }
+        .wc-name { font-size: 16.5px; font-weight: 800; color: var(--color-on-surface); font-family: 'Plus Jakarta Sans', sans-serif; }
         .wc-profession { font-size: 13px; font-weight: 700; color: #FF6B4A; margin-top: 2px; }
         .wc-verified-badge {
           display: inline-flex; align-items: center; gap: 3px;
           background: #E6F8F6; color: #1B857A; font-size: 11px; font-weight: 800;
-          padding: 2px 8px; border-radius: 999px;
+          padding: 2px 8px; border-radius: 999px; font-family: 'Plus Jakarta Sans', sans-serif;
         }
         .wc-rating-num { font-size: 14px; font-weight: 900; color: #FF6B4A; }
-        .wc-jobs-done { font-size: 12px; color: #8E8E8E; font-weight: 600; }
+        .wc-jobs-done { font-size: 12px; color: var(--color-outline); font-weight: 600; }
         .wc-fav-btn {
-          background: white; border: 1.5px solid #F0E6DF; border-radius: 50%;
+          background: white; border: 1.5px solid var(--color-outline-variant); border-radius: 50%;
           width: 34px; height: 34px; display: flex; align-items: center; justify-content: center;
-          cursor: pointer; color: #8E8E8E; flex-shrink: 0;
+          cursor: pointer; color: var(--color-outline); flex-shrink: 0;
           transition: all 0.2s;
         }
         .wc-fav-btn:hover { border-color: #FF6B4A; color: #FF6B4A; }
@@ -163,7 +163,7 @@ export default function WorkerCard({ profile, index = 0, selected, onSelect, onB
         .wc-chips { display: flex; gap: 6px; flex-wrap: wrap; }
         .wc-chip {
           display: inline-flex; align-items: center; gap: 4px;
-          font-size: 12px; font-weight: 700; color: #5A5A5A;
+          font-size: 12px; font-weight: 700; color: var(--color-on-surface-variant);
           background: #FFF4EC; border: 1px solid #FFE8D9;
           padding: 4px 10px; border-radius: 999px;
         }
@@ -171,11 +171,11 @@ export default function WorkerCard({ profile, index = 0, selected, onSelect, onB
         .wc-chip-mint { background: #E6F8F6; color: #1B857A; border-color: #A8EADB; }
         .wc-footer {
           display: flex; align-items: center; justify-content: space-between;
-          padding-top: 10px; border-top: 1.5px solid #F6ECE5;
+          padding-top: 10px; border-top: 1.5px solid var(--color-outline-variant);
         }
-        .wc-price { font-size: 22px; font-weight: 900; color: #FF6B4A; font-family: 'Poppins',sans-serif; }
-        .wc-price-unit { font-size: 12px; color: #8E8E8E; font-weight: 700; }
-        .wc-book-btn { border-radius: 999px !important; font-family: 'Poppins',sans-serif; }
+        .wc-price { font-size: 22px; font-weight: 900; color: #FF6B4A; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .wc-price-unit { font-size: 12px; color: var(--color-outline); font-weight: 700; }
+        .wc-book-btn { border-radius: 999px !important; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; }
       `}</style>
     </div>
   );

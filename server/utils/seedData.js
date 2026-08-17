@@ -35,109 +35,103 @@ const sampleRecruiters = [
   { name: 'Rahul Gupta', email: 'rahul@demo.com' },
 ];
 
+const autoSeed = async () => {
+  const count = await User.countDocuments();
+  if (count > 0) return; // already seeded
+
+  console.log('🌱 Populating demo dataset...');
+  await Category.deleteMany({});
+  await Category.insertMany(categories);
+
+  const hashedPass = await bcrypt.hash('admin123', 12);
+  await User.create({
+    name: 'Admin User',
+    email: 'admin@helperhub.com',
+    password: hashedPass,
+    role: 'admin',
+    authProvider: 'local',
+    isVerified: true,
+  });
+
+  for (const h of helpers) {
+    const user = await User.create({
+      name: h.name,
+      email: h.email,
+      password: hashedPass,
+      role: 'jobseeker',
+      authProvider: 'local',
+      isVerified: true,
+      profilePic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(h.name)}`,
+    });
+
+    await JobSeekerProfile.create({
+      userId: user._id,
+      category: h.category,
+      bio: h.bio,
+      city: h.city,
+      serviceAreas: [h.city, 'Nearby Areas'],
+      rate: h.rate,
+      rateType: h.rateType,
+      availability: 'Mon-Sat, 8am-7pm',
+      avgRating: h.avgRating,
+      totalJobs: h.totalJobs,
+      totalEarnings: h.totalJobs * h.rate * 3,
+      yearsExperience: h.yearsExperience,
+      isVerifiedByAdmin: true,
+    });
+  }
+
+  for (const r of sampleRecruiters) {
+    const user = await User.create({
+      name: r.name,
+      email: r.email,
+      password: hashedPass,
+      role: 'recruiter',
+      authProvider: 'local',
+      isVerified: true,
+      profilePic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(r.name)}`,
+    });
+
+    await JobPost.create({
+      recruiterId: user._id,
+      title: 'Urgent Pipe Leak Fix',
+      category: 'Plumber',
+      description: 'Need an experienced plumber to fix a leaking pipe under the kitchen sink. Water is dripping continuously.',
+      location: 'Andheri West, Mumbai',
+      budget: 800,
+      preferredDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
+      status: 'open',
+    });
+  }
+
+  console.log('✅ Demo dataset automatically initialized!');
+};
+
 const seedData = async () => {
   try {
     await connectDB();
     console.log('🌱 Starting seed...');
 
-    // Clear existing data
     await Category.deleteMany({});
     await User.deleteMany({ email: { $regex: '@demo.com' } });
     await JobSeekerProfile.deleteMany({});
     await JobPost.deleteMany({});
 
-    // Seed categories
-    await Category.insertMany(categories);
-    console.log('✅ Categories seeded');
-
-    // Seed admin
-    const hashedPass = await bcrypt.hash('admin123', 12);
-    const admin = await User.create({
-      name: 'Admin User',
-      email: 'admin@helperhub.com',
-      password: hashedPass,
-      role: 'admin',
-      authProvider: 'local',
-      isVerified: true,
-    });
-    console.log('✅ Admin created: admin@helperhub.com / admin123');
-
-    // Seed helpers
-    for (const h of helpers) {
-      const user = await User.create({
-        name: h.name,
-        email: h.email,
-        password: hashedPass,
-        role: 'jobseeker',
-        authProvider: 'local',
-        isVerified: true,
-        profilePic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(h.name)}`,
-      });
-
-      await JobSeekerProfile.create({
-        userId: user._id,
-        category: h.category,
-        bio: h.bio,
-        city: h.city,
-        serviceAreas: [h.city, 'Nearby Areas'],
-        rate: h.rate,
-        rateType: h.rateType,
-        availability: 'Mon-Sat, 8am-7pm',
-        avgRating: h.avgRating,
-        totalJobs: h.totalJobs,
-        totalEarnings: h.totalJobs * h.rate * 3,
-        yearsExperience: h.yearsExperience,
-        isVerifiedByAdmin: true,
-      });
-    }
-    console.log('✅ Helpers seeded');
-
-    // Seed recruiters
-    for (const r of sampleRecruiters) {
-      const user = await User.create({
-        name: r.name,
-        email: r.email,
-        password: hashedPass,
-        role: 'recruiter',
-        authProvider: 'local',
-        isVerified: true,
-        profilePic: `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(r.name)}`,
-      });
-
-      // Create sample job posts
-      await JobPost.create({
-        recruiterId: user._id,
-        title: 'Urgent Pipe Leak Fix',
-        category: 'Plumber',
-        description: 'Need an experienced plumber to fix a leaking pipe under the kitchen sink. Water is dripping continuously.',
-        location: 'Andheri West, Mumbai',
-        budget: 800,
-        preferredDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-        status: 'open',
-      });
-      await JobPost.create({
-        recruiterId: user._id,
-        title: 'Living Room Painting',
-        category: 'Painter',
-        description: 'Looking for a painter to paint the living room and one bedroom. Approximately 400 sq ft total area.',
-        location: 'Koramangala, Bangalore',
-        budget: 5000,
-        preferredDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-        status: 'open',
-      });
-    }
-    console.log('✅ Recruiters and job posts seeded');
-
+    await autoSeed();
     console.log('\n🎉 Seed complete! Demo credentials:');
     console.log('Admin:     admin@helperhub.com / admin123');
     console.log('Helper:    rajesh@demo.com / admin123');
     console.log('Recruiter: neha@demo.com / admin123');
 
-    process.exit(0);
+    if (require.main === module) process.exit(0);
   } catch (error) {
     console.error('❌ Seed error:', error);
-    process.exit(1);
+    if (require.main === module) process.exit(1);
   }
 };
 
-seedData();
+if (require.main === module) {
+  seedData();
+}
+
+module.exports = { seedData, autoSeed };

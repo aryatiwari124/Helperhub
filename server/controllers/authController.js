@@ -39,12 +39,15 @@ const signup = async (req, res) => {
     await OTP.create({ email, otp, expiresAt });
 
     // Send OTP email (or log to console in dev)
-    await sendOtpEmail(email, otp);
+    const emailResult = await sendOtpEmail(email, otp);
+
+    const isDev = !process.env.EMAIL_USER || process.env.EMAIL_USER === 'your_email@gmail.com' || emailResult?.dev;
 
     res.status(201).json({
       success: true,
       message: 'Account created. Please verify your email with the OTP sent.',
       userId: user._id,
+      ...(isDev ? { devOtp: otp, note: 'Development mode: OTP displayed on screen and in server console.' } : {}),
     });
   } catch (error) {
     console.error('Signup error:', error);
@@ -73,6 +76,9 @@ const verifyOTP = async (req, res) => {
 
     // Mark user as verified
     const user = await User.findOneAndUpdate({ email }, { isVerified: true }, { new: true });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User record not found' });
+    }
     await OTP.deleteMany({ email });
 
     const token = generateToken(user._id);
@@ -102,9 +108,14 @@ const resendOTP = async (req, res) => {
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
     await OTP.deleteMany({ email });
     await OTP.create({ email, otp, expiresAt });
-    await sendOtpEmail(email, otp);
+    const emailResult = await sendOtpEmail(email, otp);
+    const isDev = !process.env.EMAIL_USER || process.env.EMAIL_USER === 'your_email@gmail.com' || emailResult?.dev;
 
-    res.json({ success: true, message: 'New OTP sent to your email' });
+    res.json({
+      success: true,
+      message: 'New OTP sent to your email',
+      ...(isDev ? { devOtp: otp } : {}),
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }
@@ -147,22 +158,39 @@ const googleAuth = async (req, res) => {
   try {
     const { token: googleToken, role } = req.body;
 
-    // In production, verify with Google. For now, decode and trust (demo mode).
-    // To enable real verification: npm install google-auth-library
-    // const { OAuth2Client } = require('google-auth-library');
-    // const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-    // const ticket = await client.verifyIdToken({ idToken: googleToken, audience: process.env.GOOGLE_CLIENT_ID });
-    // const payload = ticket.getPayload();
-
-    // Demo: decode JWT payload (not secure for production)
-    const parts = googleToken.split('.');
-    if (parts.length !== 3) {
-      return res.status(400).json({ success: false, message: 'Invalid Google token' });
+    if (!googleToken) {
+      return res.status(400).json({ success: false, message: 'Google token is required' });
     }
-    const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
 
-    const { sub: googleId, email, name, picture } = payload;
-    if (!email) return res.status(400).json({ success: false, message: 'Could not get email from Google token' });
+    let payload;
+    const clientId = process.env.GOOGLE_CLIENT_ID;
+
+    // Cryptographic verification with google-auth-library
+    if (clientId && clientId !== 'your_google_client_id') {
+      const { OAuth2Client } = require('google-auth-library');
+      const client = new OAuth2Client(clientId);
+      const ticket = await client.verifyIdToken({
+        idToken: googleToken,
+        audience: clientId,
+      });
+      payload = ticket.getPayload();
+    } else {
+      // Decode JWT with structure verification if client ID is in demo configuration
+      const parts = googleToken.split('.');
+      if (parts.length !== 3) {
+        return res.status(400).json({ success: false, message: 'Invalid Google token structure' });
+      }
+      payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+    }
+
+    if (!payload || !payload.email) {
+      return res.status(400).json({ success: false, message: 'Could not extract valid user profile from Google token' });
+    }
+
+    const googleId = payload.sub;
+    const email = payload.email.toLowerCase();
+    const name = payload.name || payload.email.split('@')[0];
+    const picture = payload.picture || '';
 
     let user = await User.findOne({ $or: [{ googleId }, { email }] });
 
@@ -176,9 +204,15 @@ const googleAuth = async (req, res) => {
         googleId,
         authProvider: 'google',
         role,
-        profilePic: picture || '',
+        profilePic: picture,
         isVerified: true,
       });
+    } else if (!user.googleId) {
+      // Link Google ID to existing verified account
+      user.googleId = googleId;
+      user.authProvider = 'google';
+      if (picture && !user.profilePic) user.profilePic = picture;
+      await user.save();
     }
 
     const jwtToken = generateToken(user._id);
@@ -188,19 +222,26 @@ const googleAuth = async (req, res) => {
       user: { id: user._id, name: user.name, email: user.email, role: user.role, profilePic: user.profilePic },
     });
   } catch (error) {
-    console.error('Google auth error:', error);
-    res.status(500).json({ success: false, message: 'Server error' });
+    console.error('Google auth verification error:', error);
+    res.status(401).json({ success: false, message: 'Google token verification failed: ' + error.message });
   }
 };
 
 // @desc  Get current logged-in user
 // @route GET /api/v1/auth/me
 const getMe = async (req, res) => {
-  const user = await User.findById(req.user.id);
-  res.json({
-    success: true,
-    user: { id: user._id, name: user.name, email: user.email, role: user.role, profilePic: user.profilePic, phone: user.phone },
-  });
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    res.json({
+      success: true,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, profilePic: user.profilePic, phone: user.phone },
+    });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
 };
 
 module.exports = { signup, verifyOTP, resendOTP, login, googleAuth, getMe };

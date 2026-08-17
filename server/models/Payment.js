@@ -13,4 +13,6 @@ const paymentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+paymentSchema.index({ hireRequestId: 1 });
+
 module.exports = mongoose.model('Payment', paymentSchema);

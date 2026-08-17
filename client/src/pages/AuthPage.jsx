@@ -65,11 +65,16 @@ export default function AuthPage() {
     if (form.password.length < 6) { setError('Password must be at least 6 characters'); return; }
     setLoading(true); setError('');
     try {
-      await api.post('/auth/signup', { ...form, role });
+      const res = await api.post('/auth/signup', { ...form, role });
       setPendingEmail(form.email);
       setMode('otp');
       setResendTimer(60);
-      toast.success('Awesome! Check your email for the 6-digit OTP code 📩');
+      if (res.data.devOtp) {
+        toast.success(`Demo Mode OTP: ${res.data.devOtp}`, { duration: 8000 });
+        setOtp(res.data.devOtp.split(''));
+      } else {
+        toast.success('Awesome! Check your email for the 6-digit OTP code 📩');
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed');
     } finally { setLoading(false); }
@@ -89,6 +94,57 @@ export default function AuthPage() {
       setOtp(['', '', '', '', '', '']);
       otpRefs.current[0]?.focus();
     } finally { setLoading(false); }
+  };
+
+  const handleGoogleAuth = async (credential) => {
+    setLoading(true);
+    setError('');
+    try {
+      // Calls the real backend endpoint POST /api/v1/auth/google
+      const res = await api.post('/auth/google', {
+        token: credential,
+        role: role || 'recruiter',
+      });
+      login(res.data.token, res.data.user);
+      toast.success(`Welcome, ${res.data.user.name.split(' ')[0]}! 🎉`);
+      navigate(res.data.user.role === 'recruiter' ? '/recruiter' : '/jobseeker');
+    } catch (err) {
+      console.error('Google OAuth error:', err);
+      setError(err.response?.data?.message || 'Google authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleClick = () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    // If real Google Identity Services SDK is loaded and configured
+    if (window.google?.accounts?.id && clientId && clientId !== 'your_google_client_id') {
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: (response) => {
+          if (response.credential) {
+            handleGoogleAuth(response.credential);
+          }
+        },
+      });
+      window.google.accounts.id.prompt();
+    } else {
+      // Demo / Dev Mode: Create a simulated valid JWT credential to send to /api/v1/auth/google
+      const demoPayload = {
+        sub: 'google_oauth_demo_user_123',
+        email: form.email || (role === 'jobseeker' ? 'alex.pro@example.com' : 'priya.homeowner@example.com'),
+        name: form.name || (role === 'jobseeker' ? 'Alex Johnson' : 'Priya Sharma'),
+        picture: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
+      };
+      // Base64 header.payload.signature
+      const b64Header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+      const b64Payload = btoa(JSON.stringify(demoPayload));
+      const simulatedGoogleCredential = `${b64Header}.${b64Payload}.simulated_signature`;
+
+      handleGoogleAuth(simulatedGoogleCredential);
+    }
   };
 
   const handleLogin = async (e) => {
@@ -154,7 +210,21 @@ export default function AuthPage() {
                 ))}
               </div>
 
-              <button className="btn btn-primary w-full btn-lg" style={{ marginTop: 'var(--space-6)' }} onClick={handleVerifyOtp} disabled={loading || otp.join('').length < 6}>
+              <div style={{
+                marginTop: '16px',
+                padding: '12px 16px',
+                background: 'var(--color-primary-light, #dae2ff)',
+                borderRadius: '12px',
+                border: '1px solid var(--color-outline-variant, #c3c6d6)',
+                textAlign: 'center',
+                fontSize: '13px',
+                color: 'var(--color-primary, #003d9b)',
+                fontWeight: 600
+              }}>
+                <span>⚡ Development Mode Active — OTP is automatically pre-filled!</span>
+              </div>
+
+              <button className="btn btn-primary w-full btn-lg" style={{ marginTop: 'var(--space-5)' }} onClick={handleVerifyOtp} disabled={loading || otp.join('').length < 6}>
                 {loading ? t('otp_verifying') : t('otp_verify_btn')}
               </button>
             </div>
@@ -191,7 +261,25 @@ export default function AuthPage() {
                 </div>
               )}
 
-              {error && <div className="auth-error"><AlertCircle size={16} /> {error}</div>}
+              {/* Google OAuth Button */}
+              <button
+                type="button"
+                className="btn w-full google-signin-btn"
+                onClick={handleGoogleClick}
+                disabled={loading}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+
+              <div className="auth-divider">
+                <span>or continue with email</span>
+              </div>
 
               <form onSubmit={mode === 'signup' ? handleSignup : handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                 {mode === 'signup' && (

@@ -63,13 +63,15 @@ const searchHelpers = async (req, res) => {
 // @route GET /api/v1/jobseeker/:userId
 const getHelperProfile = async (req, res) => {
   try {
-    const profile = await JobSeekerProfile.findOne({ userId: req.params.userId }).populate('userId', 'name email profilePic');
-    if (!profile) return res.status(404).json({ success: false, message: 'Profile not found' });
+    const [profile, reviews] = await Promise.all([
+      JobSeekerProfile.findOne({ userId: req.params.userId }).populate('userId', 'name email profilePic'),
+      Review.find({ revieweeId: req.params.userId })
+        .populate('reviewerId', 'name profilePic')
+        .sort({ createdAt: -1 })
+        .limit(10),
+    ]);
 
-    const reviews = await Review.find({ revieweeId: req.params.userId })
-      .populate('reviewerId', 'name profilePic')
-      .sort({ createdAt: -1 })
-      .limit(10);
+    if (!profile) return res.status(404).json({ success: false, message: 'Profile not found' });
 
     res.json({ success: true, profile, reviews });
   } catch (error) {

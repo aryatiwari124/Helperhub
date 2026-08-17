@@ -94,6 +94,10 @@ const markComplete = async (req, res) => {
     const isRecruiter = request.recruiterId.toString() === req.user.id;
     const isHelper = request.helperId.toString() === req.user.id;
 
+    if (!isRecruiter && !isHelper) {
+      return res.status(403).json({ success: false, message: 'Not authorized to modify this job' });
+    }
+
     if (isRecruiter) request.recruiterMarkedDone = true;
     if (isHelper) request.helperMarkedDone = true;
 

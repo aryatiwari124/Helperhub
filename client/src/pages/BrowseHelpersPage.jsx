@@ -19,30 +19,30 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 });
 
-// Coral marker for selected worker
+// Primary blue marker for selected worker
 const selectedIcon = new L.DivIcon({
   className: '',
   html: `<div style="
-    background:#FF6B4A; color:white; border:3px solid white;
-    border-radius:50% 50% 50% 0; width:36px; height:36px;
-    transform:rotate(-45deg); box-shadow:0 4px 12px rgba(255,107,74,0.4);
+    background:var(--color-primary-container, #0052cc); color:white; border:2px solid white;
+    border-radius:50% 50% 50% 0; width:34px; height:34px;
+    transform:rotate(-45deg); box-shadow:0 4px 12px rgba(0,82,204,0.35);
     display:flex; align-items:center; justify-content:center;
-  "><div style="transform:rotate(45deg); font-size:16px">📍</div></div>`,
-  iconSize: [36, 36],
-  iconAnchor: [18, 36],
+  "><div style="transform:rotate(45deg); font-size:14px">📍</div></div>`,
+  iconSize: [34, 34],
+  iconAnchor: [17, 34],
 });
 
 const defaultIcon = new L.DivIcon({
   className: '',
   html: `<div style="
-    background:#2EC4B6; color:white; border:2px solid white;
-    border-radius:50%; width:30px; height:30px;
-    box-shadow:0 3px 8px rgba(46,196,182,0.4);
+    background:var(--color-tertiary-container, #006844); color:white; border:2px solid white;
+    border-radius:50%; width:28px; height:28px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
     display:flex; align-items:center; justify-content:center;
-    font-size:14px;
+    font-size:13px;
   ">⚡</div>`,
-  iconSize: [30, 30],
-  iconAnchor: [15, 15],
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
 });
 
 // Delhi city center coordinates

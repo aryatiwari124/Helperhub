@@ -1,14 +1,39 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
+  const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/helperhub';
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-      serverSelectionTimeoutMS: 5000,
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 3000,
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    return conn;
   } catch (error) {
-    console.warn(`⚠️ MongoDB Connection Warning: ${error.message}`);
-    console.warn(`💡 Tip: Make sure MongoDB is running locally at ${process.env.MONGO_URI} or provide a MONGO_URI in server/.env (e.g. MongoDB Atlas cluster link).`);
+    console.warn(`⚠️ Local MongoDB (${uri}) not reachable: ${error.message}`);
+    console.log('🔄 Launching In-Memory MongoDB instance for development & testing...');
+    
+    try {
+      const { MongoMemoryServer } = require('mongodb-memory-server');
+      const mongod = await MongoMemoryServer.create();
+      const memoryUri = mongod.getUri();
+      const conn = await mongoose.connect(memoryUri);
+      console.log(`✅ In-Memory MongoDB connected at ${memoryUri}`);
+
+      // Auto-seed initial demo dataset if collections are empty
+      try {
+        const { autoSeed } = require('../utils/seedData');
+        if (typeof autoSeed === 'function') {
+          await autoSeed();
+        }
+      } catch (seedErr) {
+        console.warn('⚠️ Note: Auto-seed skipped:', seedErr.message);
+      }
+
+      return conn;
+    } catch (memErr) {
+      console.error('❌ Failed to start in-memory MongoDB fallback:', memErr.message);
+      throw memErr;
+    }
   }
 };
 

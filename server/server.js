@@ -22,6 +22,20 @@ app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', creden
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const mongoose = require('mongoose');
+
+// DB readiness check middleware
+app.use('/api/v1', (req, res, next) => {
+  if (req.path === '/health') return next();
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      success: false,
+      message: 'Database is initializing/connecting, please retry in a few moments...',
+    });
+  }
+  next();
+});
+
 // Health check
 app.get('/api/v1/health', (req, res) => {
   res.json({ success: true, message: 'HelperHub API is running 🚀', timestamp: new Date().toISOString() });
