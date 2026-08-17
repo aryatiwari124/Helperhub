@@ -28,12 +28,12 @@ export default function Footer() {
           {/* Services */}
           <div className="footer-section">
             <h4>{t('footer_services')}</h4>
-            <Link to="/helpers?category=Plumber">Plumbing</Link>
-            <Link to="/helpers?category=Electrician">Electrical</Link>
-            <Link to="/helpers?category=Carpenter">Carpentry</Link>
-            <Link to="/helpers?category=AC+Technician">AC Repair</Link>
-            <Link to="/helpers?category=Painter">Painting</Link>
-            <Link to="/helpers?category=Cleaner">Cleaning</Link>
+            <Link to="/helpers?category=Plumber">{t('cat_plumber')}</Link>
+            <Link to="/helpers?category=Electrician">{t('cat_electrician')}</Link>
+            <Link to="/helpers?category=Carpenter">{t('cat_carpenter')}</Link>
+            <Link to="/helpers?category=AC+Technician">{t('cat_ac')}</Link>
+            <Link to="/helpers?category=Painter">{t('cat_painter')}</Link>
+            <Link to="/helpers?category=Cleaner">{t('cat_cleaner')}</Link>
           </div>
 
           {/* Company */}
@@ -41,14 +41,14 @@ export default function Footer() {
             <h4>{t('footer_company')}</h4>
             <Link to="/about">{t('footer_about')}</Link>
             <Link to="/helpers">{t('nav_find')}</Link>
-            <Link to="/auth?mode=signup&role=jobseeker">{t('auth_role_work')}</Link>
+            <Link to="/auth?mode=signup&role=jobseeker">{t('cta_work_btn')}</Link>
             <a href="#">{t('footer_blog')}</a>
             <a href="#">{t('footer_careers')}</a>
           </div>
 
           {/* Contact */}
           <div className="footer-section">
-            <h4>Contact</h4>
+            <h4>{t('footer_contact')}</h4>
             <div className="footer-contact-item"><MapPin size={14} /><span>Mumbai, Maharashtra</span></div>
             <div className="footer-contact-item"><Phone size={14} /><span>+91 98765 43210</span></div>
             <div className="footer-contact-item"><Mail size={14} /><span>hello@helperhub.in</span></div>

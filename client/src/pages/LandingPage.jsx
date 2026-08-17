@@ -5,64 +5,21 @@ import { Search, Star, ShieldCheck, Zap, ArrowRight, CheckCircle2, Clock, Thumbs
 import api from '../services/api';
 import HelperCard from '../components/helper/HelperCard';
 import { useAuth } from '../context/AuthContext';
-
-const CATEGORIES = [
-  { name: 'Plumber', icon: '🔧', color: '#FFEFEA', border: '#FFC4B6' },
-  { name: 'Electrician', icon: '⚡', color: '#FFF8E5', border: '#FFE5A3' },
-  { name: 'Carpenter', icon: '🪚', color: '#E6F8F6', border: '#A8EADB' },
-  { name: 'AC Technician', icon: '❄️', color: '#EBF5FF', border: '#B8DCFF' },
-  { name: 'Painter', icon: '🎨', color: '#F5EEFD', border: '#DCBEFB' },
-  { name: 'Cleaner', icon: '🧹', color: '#E6F8F6', border: '#A8EADB' },
-  { name: 'Mechanic', icon: '🔩', color: '#FFEFEA', border: '#FFC4B6' },
-  { name: 'Gardener', icon: '🌿', color: '#EBFBF3', border: '#A2F3C8' },
-];
-
-// 5-step workflow telling the platform story
-const FIVE_STEPS = [
-  { step: '1', title: 'Search Service 🔍', desc: 'Type your repair need or browse verified local helpers by category & location.' },
-  { step: '2', title: 'Book Professional 🤝', desc: 'Select a top-rated hero, pick your date & time, and send an instant hire request.' },
-  { step: '3', title: 'Pay Securely 🔒', desc: 'Once accepted, funds are held safely in Stripe Escrow until the work is done.' },
-  { step: '4', title: 'Job Completed 🛠️', desc: 'Hero finishes the work at your doorstep. Both sides confirm job completion.' },
-  { step: '5', title: 'Rate Experience ⭐', desc: 'Payment is released to the hero, and you leave a star review to help neighbors!' },
-];
-
-// Live completed jobs feed (makes platform feel alive)
-const RECENT_COMPLETED_JOBS = [
-  { title: 'Kitchen Sink Leak Fixed', location: 'Andheri West, Mumbai', timeAgo: '2 hours ago', rating: 5, category: 'Plumbing', price: '₹600' },
-  { title: 'Split AC Installed', location: 'Koramangala, Bangalore', timeAgo: 'Yesterday', rating: 5, category: 'AC Technician', price: '₹1,500' },
-  { title: 'Living Room Painting', location: 'Bandra, Mumbai', timeAgo: '4 hours ago', rating: 5, category: 'Painting', price: '₹3,200' },
-  { title: 'Main MCB Tripping Fixed', location: 'South Ex, Delhi', timeAgo: '6 hours ago', rating: 5, category: 'Electrical', price: '₹450' },
-  { title: 'Wooden Door Frame Repair', location: 'HSR Layout, Bangalore', timeAgo: '8 hours ago', rating: 5, category: 'Carpentry', price: '₹800' },
-];
-
-// Real Customer Testimonials (Photo, Name, Stars, One Sentence)
-const TESTIMONIALS = [
-  {
-    name: 'Priya Sharma',
-    city: 'Mumbai',
-    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
-    stars: 5,
-    quote: '"Booked a plumber in 2 minutes for a burst sink pipe, and Rajesh arrived in 15 mins to fix it completely!"',
-  },
-  {
-    name: 'Anand Verma',
-    city: 'Bangalore',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    stars: 5,
-    quote: '"The escrow payment protection gave me 100% peace of mind. Best home service app hands down."',
-  },
-  {
-    name: 'Meera Nair',
-    city: 'Delhi',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    stars: 5,
-    quote: '"Fair, transparent pricing without any surprise charges. The electrician was super polite and clean."',
-  },
-];
-
 import { useLanguage } from '../context/LanguageContext';
 
+const CATEGORIES = [
+  { name: 'Plumber', key: 'cat_plumber', icon: '🔧', color: '#FFEFEA', border: '#FFC4B6' },
+  { name: 'Electrician', key: 'cat_electrician', icon: '⚡', color: '#FFF8E5', border: '#FFE5A3' },
+  { name: 'Carpenter', key: 'cat_carpenter', icon: '🪚', color: '#E6F8F6', border: '#A8EADB' },
+  { name: 'AC Technician', key: 'cat_ac', icon: '❄️', color: '#EBF5FF', border: '#B8DCFF' },
+  { name: 'Painter', key: 'cat_painter', icon: '🎨', color: '#F5EEFD', border: '#DCBEFB' },
+  { name: 'Cleaner', key: 'cat_cleaner', icon: '🧹', color: '#E6F8F6', border: '#A8EADB' },
+  { name: 'Mechanic', key: 'cat_mechanic', icon: '🔩', color: '#FFEFEA', border: '#FFC4B6' },
+  { name: 'Gardener', key: 'cat_gardener', icon: '🌿', color: '#EBFBF3', border: '#A2F3C8' },
+];
+
 export default function LandingPage() {
+  const { user } = useAuth();
   const { t } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -78,7 +35,7 @@ export default function LandingPage() {
   const handleEstimate = async (e) => {
     e.preventDefault();
     if (!estForm.jobDescription.trim() || estForm.jobDescription.trim().length < 10) {
-      setEstError('Please describe the job in at least 10 characters.');
+      setEstError(t('ai_est_error_min_len'));
       return;
     }
     setEstLoading(true);
@@ -97,17 +54,25 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    api.get('/jobseeker/all?limit=6')
-      .then(r => setFeaturedHelpers(r.data.profiles || []))
-      .catch(() => {})
-      .finally(() => setLoadingHelpers(false));
+    const fetchHelpers = async () => {
+      try {
+        const res = await api.get('/helpers?limit=6');
+        const profiles = res.data?.profiles || res.data || [];
+        setFeaturedHelpers(Array.isArray(profiles) ? profiles : []);
+      } catch (err) {
+        console.error('Error loading featured helpers:', err);
+      } finally {
+        setLoadingHelpers(false);
+      }
+    };
+    fetchHelpers();
   }, []);
 
   const handleSearch = (e) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (selectedCategory) params.set('category', selectedCategory);
-    if (searchQuery) params.set('city', searchQuery);
+    if (searchQuery.trim()) params.append('q', searchQuery.trim());
+    if (selectedCategory) params.append('category', selectedCategory);
     navigate(`/helpers?${params.toString()}`);
   };
 
@@ -115,6 +80,55 @@ export default function LandingPage() {
     navigate(`/helpers?category=${encodeURIComponent(cat)}`);
   };
 
+  // 5-step workflow telling the platform story
+  const FIVE_STEPS = [
+    { step: '1', title: t('how_step1_title'), desc: t('how_step1_desc') },
+    { step: '2', title: t('how_step2_title'), desc: t('how_step2_desc') },
+    { step: '3', title: t('how_step3_title'), desc: t('how_step3_desc') },
+    { step: '4', title: t('how_step4_title'), desc: t('how_step4_desc') },
+    { step: '5', title: t('how_step5_title'), desc: t('how_step5_desc') },
+  ];
+
+  // Live completed jobs feed (makes platform feel alive)
+  const RECENT_COMPLETED_JOBS = [
+    { title: t('job_kitchen_sink'), location: 'Andheri West, Mumbai', timeAgo: '2 ' + t('general_hrs') + ' ago', rating: 5, category: t('cat_plumber'), price: '₹600' },
+    { title: t('job_split_ac'), location: 'Koramangala, Bangalore', timeAgo: t('general_today'), rating: 5, category: t('cat_ac'), price: '₹1,500' },
+    { title: t('job_living_room_paint'), location: 'Bandra, Mumbai', timeAgo: '4 ' + t('general_hrs') + ' ago', rating: 5, category: t('cat_painter'), price: '₹3,200' },
+    { title: t('job_mcb_tripping'), location: 'South Ex, Delhi', timeAgo: '6 ' + t('general_hrs') + ' ago', rating: 5, category: t('cat_electrician'), price: '₹450' },
+    { title: t('job_door_repair'), location: 'HSR Layout, Bangalore', timeAgo: '8 ' + t('general_hrs') + ' ago', rating: 5, category: t('cat_carpenter'), price: '₹800' },
+  ];
+
+  // Customer Testimonials
+  const TESTIMONIALS = [
+    {
+      name: 'Priya Sharma',
+      city: 'Mumbai',
+      avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80',
+      stars: 5,
+      quote: t('test_1_quote'),
+    },
+    {
+      name: 'Anand Verma',
+      city: 'Bangalore',
+      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
+      stars: 5,
+      quote: t('test_2_quote'),
+    },
+    {
+      name: 'Meera Nair',
+      city: 'Delhi',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
+      stars: 5,
+      quote: t('test_3_quote'),
+    },
+  ];
+
+  const WHY_FEATURES = [
+    { title: t('why_1_title'), desc: t('why_1_desc'), icon: <ShieldCheck size={28} className="text-primary" /> },
+    { title: t('why_2_title'), desc: t('why_2_desc'), icon: <Shield size={28} className="text-primary" /> },
+    { title: t('why_3_title'), desc: t('why_3_desc'), icon: <Calculator size={28} className="text-primary" /> },
+    { title: t('why_4_title'), desc: t('why_4_desc'), icon: <Zap size={28} className="text-primary" /> },
+  ];
 
   return (
     <div>
@@ -125,15 +139,15 @@ export default function LandingPage() {
             <div className="hero-badge animate-fadeIn">
               <span>🎉</span>
               <span>{t('hero_badge')}</span>
-          </div>
-           <h1 className="hero-title animate-slideUp">
+            </div>
+            <h1 className="hero-title animate-slideUp">
               {t("hero_title_1")}{" "}
               <span className="hero-title-accent">
                 {t("hero_title_2")}
               </span>
               <br />
               {t("hero_title_3")}
-          </h1>
+            </h1>
             <p className="hero-subtitle animate-slideUp">
               {t('hero_sub')}
             </p>
@@ -147,7 +161,7 @@ export default function LandingPage() {
                   onChange={e => setSelectedCategory(e.target.value)}
                 >
                   <option value="">{t('browse_cat_all')}</option>
-                  {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.icon} {c.name}</option>)}
+                  {CATEGORIES.map(c => <option key={c.name} value={c.name}>{c.icon} {t(c.key, c.name)}</option>)}
                 </select>
                 <div className="hero-search-divider" />
                 <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -171,7 +185,7 @@ export default function LandingPage() {
               <span className="text-secondary font-semibold" style={{ fontSize: '14px' }}>{t('landing_quick_popular')}</span>
               {CATEGORIES.slice(0, 5).map(c => (
                 <button key={c.name} className="quick-tag" onClick={() => handleCategoryClick(c.name)}>
-                  {c.icon} {c.name}
+                  {c.icon} {t(c.key, c.name)}
                 </button>
               ))}
             </div>
@@ -209,7 +223,7 @@ export default function LandingPage() {
               {CATEGORIES.map((cat, i) => (
                 <div key={cat.name} className="hero-category-orb" onClick={() => handleCategoryClick(cat.name)} style={{ background: cat.color, border: `2px solid ${cat.border}`, animationDelay: `${i * 0.12}s` }}>
                   <span style={{ fontSize: 32 }}>{cat.icon}</span>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-on-surface)' }}>{cat.name}</span>
+                  <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-on-surface)' }}>{t(cat.key, cat.name)}</span>
                 </div>
               ))}
             </div>
@@ -229,7 +243,7 @@ export default function LandingPage() {
             {CATEGORIES.map(cat => (
               <button key={cat.name} className="category-card" onClick={() => handleCategoryClick(cat.name)} style={{ '--cat-bg': cat.color, '--cat-border': cat.border }}>
                 <div className="category-icon">{cat.icon}</div>
-                <span className="category-name">{cat.name}</span>
+                <span className="category-name">{t(cat.key, cat.name)}</span>
                 <span className="category-tag">{t('landing_cat_browse')}</span>
               </button>
             ))}
@@ -258,13 +272,14 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ====== ⭐ TOP RATED PROFESSIONALS (4-6 CARDS) ====== */}
+      {/* ====== TOP HELPERS ====== */}
       <section className="section">
         <div className="container">
-          <div className="section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
+          <div className="flex justify-between items-end mb-8 flex-wrap gap-4">
             <div>
-              <span className="badge badge-success" style={{ marginBottom: 8 }}>{t('landing_top_badge')}</span>
-              <h2 className="section-title" style={{ marginBottom: 0 }}>{t('top_title')}</h2>
+              <span className="badge badge-primary mb-2">{t('landing_top_badge')}</span>
+              <h2 className="headline-lg">{t('top_title')}</h2>
+              <p className="text-secondary">{t('top_sub')}</p>
             </div>
             <Link to="/helpers" className="btn btn-outline">
               {t('landing_top_explore')} <ArrowRight size={16} />
@@ -286,17 +301,17 @@ export default function LandingPage() {
           ) : (
             <div className="empty-state">
               <div className="empty-state-icon">👷</div>
-              <p className="empty-state-title">No helpers registered yet</p>
+              <p className="empty-state-title">{t('landing_no_helpers')}</p>
             </div>
           )}
         </div>
       </section>
 
-      {/* ====== ⭐ RECENT JOBS COMPLETED (FEED THAT MAKES APP FEEL ALIVE) ====== */}
+      {/* ====== ⭐ RECENT JOBS COMPLETED ====== */}
       <section className="section" style={{ background: '#FFF4EC' }}>
         <div className="container">
           <div className="section-header text-center">
-            <span className="badge badge-primary" style={{ marginBottom: 12 }}>⚡ Live Activity</span>
+            <span className="badge badge-primary" style={{ marginBottom: 12 }}>{t('landing_live_activity')}</span>
             <h2 className="section-title">{t('landing_jobs_badge')}</h2>
             <p className="section-subtitle" style={{ margin: '0 auto' }}>{t('recent_title')}</p>
           </div>
@@ -335,23 +350,23 @@ export default function LandingPage() {
           </div>
 
           <div className="testimonials-grid">
-            {TESTIMONIALS.map((t) => (
-              <div key={t.name} className="testimonial-card card card-hover">
+            {TESTIMONIALS.map((tItem) => (
+              <div key={tItem.name} className="testimonial-card card card-hover">
                 <div className="flex items-center gap-3 mb-4">
-                  <img src={t.avatar} alt={t.name} className="avatar avatar-md avatar-ring" />
+                  <img src={tItem.avatar} alt={tItem.name} className="avatar avatar-md avatar-ring" />
                   <div>
-                    <h4 style={{ fontWeight: 800, fontSize: '16px' }}>{t.name}</h4>
-                    <p className="text-xs text-muted font-bold">📍 {t.city}</p>
+                    <h4 style={{ fontWeight: 800, fontSize: '16px' }}>{tItem.name}</h4>
+                    <p className="text-xs text-muted font-bold">📍 {tItem.city}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-1 mb-3">
-                  {[...Array(t.stars)].map((_, i) => (
+                  {[...Array(tItem.stars)].map((_, i) => (
                     <Star key={i} size={15} fill="#FF6B4A" stroke="#FF6B4A" />
                   ))}
                 </div>
 
-                <p className="testimonial-quote">{t.quote}</p>
+                <p className="testimonial-quote">{tItem.quote}</p>
               </div>
             ))}
           </div>
@@ -367,12 +382,7 @@ export default function LandingPage() {
           </div>
 
           <div className="why-grid mb-12">
-            {[
-              { title: '✔ Verified Professionals', desc: '100% Aadhaar & police background checked pros.', icon: <ShieldCheck size={28} className="text-primary" /> },
-              { title: '✔ Secure Payments', desc: 'Funds held safely in escrow until work is approved.', icon: <Shield size={28} className="text-primary" /> },
-              { title: '✔ AI Cost Estimation', desc: 'Instant fair price ranges based on market rates.', icon: <Calculator size={28} className="text-primary" /> },
-              { title: '✔ Emergency Booking', desc: '15-minute rapid SOS dispatch for urgent leaks & faults.', icon: <Zap size={28} className="text-primary" /> },
-            ].map((feature, i) => (
+            {WHY_FEATURES.map((feature, i) => (
               <div key={i} className="why-card card card-hover">
                 <div className="why-icon-box">{feature.icon}</div>
                 <h3 className="why-title">{feature.title}</h3>
@@ -381,30 +391,31 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* ====== AI COST ESTIMATOR — Powered by Claude (Anthropic) ====== */}
+          {/* ====== AI COST ESTIMATOR — Powered by Claude (Anthropic/OpenRouter) ====== */}
           <form onSubmit={handleEstimate} className="card card-body ai-calculator-widget" style={{ margin: '0 auto', maxWidth: 600, border: '2px solid #FFDCD4' }}>
             <div className="flex items-center gap-2 mb-2">
               <Sparkles size={22} className="text-primary" />
-              <h3 style={{ fontSize: '19px', fontWeight: 900 }}>AI Cost Estimator</h3>
-              <span className="badge badge-primary" style={{ marginLeft: 'auto', fontSize: 11 }}>✨ Powered by Claude AI</span>
+              <h3 style={{ fontSize: '19px', fontWeight: 900 }}>{t('ai_est_title')}</h3>
+              <span className="badge badge-primary" style={{ marginLeft: 'auto', fontSize: 11 }}>{t('ai_est_badge')}</span>
             </div>
-            <p className="text-secondary" style={{ fontSize: 13, marginBottom: 16 }}>Describe your job and get an instant AI-powered price estimate based on real Indian market rates.</p>
+            <p className="text-secondary" style={{ fontSize: 13, marginBottom: 16 }}>{t('ai_est_subtitle')}</p>
 
             <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <label className="form-label">Service Type</label>
+                <label className="form-label">{t('ai_est_service_type')}</label>
                 <select
                   className="form-select"
                   value={estForm.serviceType}
                   onChange={e => setEstForm(f => ({ ...f, serviceType: e.target.value }))}
                 >
-                  {['Plumber','Electrician','Carpenter','Painter','AC Technician','Cleaner','Mechanic','Gardener','General Repair'].map(s => (
-                    <option key={s} value={s}>{s}</option>
+                  {CATEGORIES.map(s => (
+                    <option key={s.name} value={s.name}>{t(s.key, s.name)}</option>
                   ))}
+                  <option value="General Repair">{t('cat_repair', 'General Repair')}</option>
                 </select>
               </div>
               <div>
-                <label className="form-label">City</label>
+                <label className="form-label">{t('ai_est_city')}</label>
                 <select
                   className="form-select"
                   value={estForm.city}
@@ -418,11 +429,11 @@ export default function LandingPage() {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Job Description <span style={{ color: 'var(--color-outline)', fontWeight: 400 }}>(what needs to be done?)</span></label>
+              <label className="form-label">{t('ai_est_job_desc')} <span style={{ color: 'var(--color-outline)', fontWeight: 400 }}>{t('ai_est_job_desc_hint')}</span></label>
               <textarea
                 className="form-input"
                 rows={3}
-                placeholder="e.g. Kitchen sink pipe is leaking under the counter, water dripping onto the cabinet floor..."
+                placeholder={t('ai_est_placeholder')}
                 value={estForm.jobDescription}
                 onChange={e => setEstForm(f => ({ ...f, jobDescription: e.target.value }))}
                 style={{ resize: 'vertical', fontFamily: 'inherit' }}
@@ -439,7 +450,7 @@ export default function LandingPage() {
               <div className="calc-result-box" style={{ marginBottom: 12 }}>
                 <div className="flex justify-between items-start" style={{ flexWrap: 'wrap', gap: 8 }}>
                   <div>
-                    <span className="text-xs text-muted font-bold">AI ESTIMATED PRICE RANGE</span>
+                    <span className="text-xs text-muted font-bold">{t('ai_est_price_range')}</span>
                     <p style={{ fontSize: '26px', fontWeight: 900, color: 'var(--color-primary)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.2 }}>
                       ₹{estResult.min_cost.toLocaleString('en-IN')} – ₹{estResult.max_cost.toLocaleString('en-IN')}
                     </p>
@@ -449,14 +460,14 @@ export default function LandingPage() {
                     color: estResult.confidence === 'high' ? '#065F46' : estResult.confidence === 'medium' ? '#92400E' : '#991B1B',
                     fontWeight: 700, fontSize: 12, padding: '4px 10px'
                   }}>
-                    {estResult.confidence === 'high' ? '✓ High Confidence' : estResult.confidence === 'medium' ? '~ Medium Confidence' : '! Low Confidence'}
+                    {estResult.confidence === 'high' ? t('ai_est_high_conf') : estResult.confidence === 'medium' ? t('ai_est_med_conf') : t('ai_est_low_conf')}
                   </span>
                 </div>
                 <p style={{ fontSize: 13, color: 'var(--color-on-surface-variant)', marginTop: 8, lineHeight: 1.5 }}>
                   💡 {estResult.reasoning}
                 </p>
                 <button type="button" className="btn btn-primary btn-sm" style={{ marginTop: 10 }} onClick={() => handleCategoryClick(estForm.serviceType)}>
-                  Book a {estForm.serviceType} →
+                  {t('ai_est_book_prefix')} {t(CATEGORIES.find(c => c.name === estForm.serviceType)?.key || '', estForm.serviceType)} →
                 </button>
               </div>
             )}
@@ -465,9 +476,9 @@ export default function LandingPage() {
               {estLoading ? (
                 <span style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
                   <span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite', display: 'inline-block' }} />
-                  Getting AI Estimate...
+                  {t('ai_est_loading')}
                 </span>
-              ) : '✨ Get AI Cost Estimate'}
+              ) : t('ai_est_get_btn')}
             </button>
           </form>
         </div>
@@ -486,12 +497,12 @@ export default function LandingPage() {
 
               <div className="flex gap-4 flex-wrap">
                 <div className="app-store-btn">
-                  <span> App Store</span>
-                  <span className="app-coming-tag">Coming Soon</span>
+                  <span>{t('app_ios')}</span>
+                  <span className="app-coming-tag">{t('app_badge')}</span>
                 </div>
                 <div className="app-store-btn">
-                  <span>▶ Google Play</span>
-                  <span className="app-coming-tag">Coming Soon</span>
+                  <span>{t('app_android')}</span>
+                  <span className="app-coming-tag">{t('app_badge')}</span>
                 </div>
               </div>
             </div>
@@ -499,10 +510,10 @@ export default function LandingPage() {
             <div className="app-mockup-visual hide-mobile">
               <div className="app-mockup-screen">
                 <div className="mockup-notch" />
-                <div className="mockup-header">HelperHub SOS</div>
+                <div className="mockup-header">{t('app_mockup_title')}</div>
                 <div className="mockup-body flex flex-col gap-2 items-center justify-center text-center">
                   <div style={{ fontSize: 42 }}>📱⚡</div>
-                  <p style={{ fontSize: 13, fontWeight: 800, color: '#FF6B4A' }}>1-Tap Emergency Fix</p>
+                  <p style={{ fontSize: 13, fontWeight: 800, color: '#FF6B4A' }}>{t('app_mockup_desc')}</p>
                 </div>
               </div>
             </div>
@@ -514,14 +525,14 @@ export default function LandingPage() {
       <section className="cta-section">
         <div className="container">
           <div className="cta-inner">
-            <h2 className="cta-title">Ready to Fix Things Up? 🛠️</h2>
-            <p className="cta-subtitle">Join thousands of happy homeowners and local pros on HelperHub!</p>
+            <h2 className="cta-title">{t('cta_hire_title')}</h2>
+            <p className="cta-subtitle">{t('cta_hire_sub')}</p>
             <div className="flex gap-4 flex-wrap justify-center mt-4">
               <Link to="/auth?mode=signup&role=recruiter" className="btn btn-primary btn-lg" style={{ background: 'white', color: 'var(--color-primary)' }}>
-                Hire Your Hero Now
+                {t('cta_hire_btn')}
               </Link>
               <Link to="/auth?mode=signup&role=jobseeker" className="btn btn-outline btn-lg" style={{ borderColor: 'white', color: 'white' }}>
-                Join as a Helper
+                {t('cta_work_btn')}
               </Link>
             </div>
           </div>

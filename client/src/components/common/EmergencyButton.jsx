@@ -1,81 +1,83 @@
 import { useState } from 'react';
 import { Siren, X, Zap, Flame, Droplet, Key, AlertTriangle, PhoneCall, ShieldAlert, CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
-
-const EMERGENCY_SERVICES = [
-  {
-    id: 'electrician',
-    title: 'Emergency Electrician',
-    icon: '⚡',
-    lucideIcon: <Zap size={24} color="#FFB703" />,
-    desc: 'Power outage, main MCB trip, sparking switches, or short circuit.',
-    eta: '10-15 mins',
-    color: '#FFF8E5',
-    borderColor: '#FFE5A3',
-  },
-  {
-    id: 'gas_leak',
-    title: 'Gas Leak Emergency',
-    icon: '⛽',
-    lucideIcon: <AlertTriangle size={24} color="#E63946" />,
-    desc: 'Piped gas leak smell, regulator fault, or LPG valve issue.',
-    eta: '8-12 mins',
-    color: '#FFEAEB',
-    borderColor: '#FFC4C7',
-  },
-  {
-    id: 'burst_pipe',
-    title: 'Burst Pipe',
-    icon: '🌊',
-    lucideIcon: <Droplet size={24} color="#2EC4B6" />,
-    desc: 'Uncontrolled water flooding, pipe line break, or main valve failure.',
-    eta: '10-15 mins',
-    color: '#E6F8F6',
-    borderColor: '#A8EADB',
-  },
-  {
-    id: 'door_lock',
-    title: 'Door Lockout',
-    icon: '🔑',
-    lucideIcon: <Key size={24} color="#FF6B4A" />,
-    desc: 'Locked outside, key snapped in cylinder, or electronic lock failure.',
-    eta: '12-18 mins',
-    color: '#FFEFEA',
-    borderColor: '#FFC4B6',
-  },
-  {
-    id: 'water_leakage',
-    title: 'Water Leakage & Overflow',
-    icon: '💧',
-    lucideIcon: <Droplet size={24} color="#0066FF" />,
-    desc: 'Overhead tank overflow, major ceiling seepage, or drain blockage.',
-    eta: '15-20 mins',
-    color: '#EBF5FF',
-    borderColor: '#B8DCFF',
-  },
-  {
-    id: 'fire_safety',
-    title: 'Fire Safety & Electrical Smoke',
-    icon: '🔥',
-    lucideIcon: <Flame size={24} color="#E63946" />,
-    desc: 'Wiring burning smell, appliance overheating, or smoke isolation.',
-    eta: '5-10 mins',
-    color: '#FFEAEB',
-    borderColor: '#FFC4C7',
-  },
-];
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function EmergencyButton() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedService, setSelectedService] = useState(null);
   const [isDispatching, setIsDispatching] = useState(false);
+
+  const EMERGENCY_SERVICES = [
+    {
+      id: 'electrician',
+      title: t('sos_electrician_title'),
+      icon: '⚡',
+      lucideIcon: <Zap size={24} color="#FFB703" />,
+      desc: t('sos_electrician_desc'),
+      eta: '10-15 mins',
+      color: '#FFF8E5',
+      borderColor: '#FFE5A3',
+    },
+    {
+      id: 'gas_leak',
+      title: t('sos_gas_title'),
+      icon: '⛽',
+      lucideIcon: <AlertTriangle size={24} color="#E63946" />,
+      desc: t('sos_gas_desc'),
+      eta: '8-12 mins',
+      color: '#FFEAEB',
+      borderColor: '#FFC4C7',
+    },
+    {
+      id: 'burst_pipe',
+      title: t('sos_pipe_title'),
+      icon: '🌊',
+      lucideIcon: <Droplet size={24} color="#2EC4B6" />,
+      desc: t('sos_pipe_desc'),
+      eta: '10-15 mins',
+      color: '#E6F8F6',
+      borderColor: '#A8EADB',
+    },
+    {
+      id: 'door_lock',
+      title: t('sos_lock_title'),
+      icon: '🔑',
+      lucideIcon: <Key size={24} color="#FF6B4A" />,
+      desc: t('sos_lock_desc'),
+      eta: '12-18 mins',
+      color: '#FFEFEA',
+      borderColor: '#FFC4C7',
+    },
+    {
+      id: 'water_leakage',
+      title: t('sos_water_title'),
+      icon: '💧',
+      lucideIcon: <Droplet size={24} color="#0066FF" />,
+      desc: t('sos_water_desc'),
+      eta: '15-20 mins',
+      color: '#EBF5FF',
+      borderColor: '#B8DCFF',
+    },
+    {
+      id: 'fire_safety',
+      title: t('sos_fire_title'),
+      icon: '🔥',
+      lucideIcon: <Flame size={24} color="#E63946" />,
+      desc: t('sos_fire_desc'),
+      eta: '5-10 mins',
+      color: '#FFEAEB',
+      borderColor: '#FFC4C7',
+    },
+  ];
 
   const handleDispatch = (service) => {
     setSelectedService(service);
     setIsDispatching(true);
     setTimeout(() => {
       setIsDispatching(false);
-      toast.success(`🚨 Priority SOS Dispatched for ${service.title}! A verified hero is arriving in ${service.eta}.`, {
+      toast.success(`🚨 ${service.title} — ${service.eta}`, {
         duration: 6000,
         style: { borderRadius: '16px', background: '#2B2B2B', color: '#fff', fontWeight: 'bold' },
       });
@@ -90,12 +92,12 @@ export default function EmergencyButton() {
       <button
         className="floating-emergency-btn animate-fadeIn"
         onClick={() => setIsOpen(true)}
-        title="Emergency SOS Assistance"
+        title={t('sos_title')}
       >
         <span className="emergency-siren-wrapper">
           <Siren size={22} className="emergency-siren-icon" />
         </span>
-        <span className="emergency-btn-text">SOS Emergency</span>
+        <span className="emergency-btn-text">{t('sos_btn')}</span>
       </button>
 
       {/* Emergency Modal */}
@@ -110,10 +112,10 @@ export default function EmergencyButton() {
                 </div>
                 <div>
                   <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#E63946' }}>
-                    🚨 Emergency SOS Assistance
+                    {t('sos_title')}
                   </h2>
                   <p className="text-xs text-secondary" style={{ marginTop: 2 }}>
-                    Priority 15-minute dispatch for urgent household hazards
+                    {t('sos_subtitle')}
                   </p>
                 </div>
               </div>
@@ -126,7 +128,7 @@ export default function EmergencyButton() {
             <div className="modal-body emergency-modal-body">
               <div className="emergency-alert-banner">
                 <AlertTriangle size={18} />
-                <span>Need immediate help? Pick your emergency below for 1-click priority dispatch.</span>
+                <span>{t('sos_banner')}</span>
               </div>
 
               <div className="emergency-grid">
@@ -150,10 +152,10 @@ export default function EmergencyButton() {
                       disabled={isDispatching && selectedService?.id === service.id}
                     >
                       {isDispatching && selectedService?.id === service.id ? (
-                        'Dispatching Hero...'
+                        t('sos_dispatching')
                       ) : (
                         <>
-                          <PhoneCall size={14} /> Dispatch Priority Hero
+                          <PhoneCall size={14} /> {t('sos_dispatch_btn')}
                         </>
                       )}
                     </button>
@@ -165,10 +167,10 @@ export default function EmergencyButton() {
             {/* Modal Footer */}
             <div className="modal-footer emergency-modal-footer">
               <span className="text-xs text-muted font-bold flex items-center gap-1">
-                <CheckCircle2 size={14} color="var(--color-secondary)" /> 24/7 Rapid Response Unit active
+                <CheckCircle2 size={14} color="var(--color-secondary)" /> {t('sos_unit_active')}
               </span>
               <button className="btn btn-ghost btn-sm" onClick={() => setIsOpen(false)}>
-                Cancel
+                {t('general_cancel')}
               </button>
             </div>
           </div>
