@@ -69,9 +69,30 @@ export default function LandingPage() {
   const [featuredHelpers, setFeaturedHelpers] = useState([]);
   const [loadingHelpers, setLoadingHelpers] = useState(true);
 
-  // Interactive AI Cost Estimation Widget State
-  const [calcCategory, setCalcCategory] = useState('Plumber');
-  const [calcHours, setCalcHours] = useState(2);
+  // AI Cost Estimation Widget State
+  const [estForm, setEstForm] = useState({ serviceType: 'Plumber', jobDescription: '', city: 'Mumbai' });
+  const [estResult, setEstResult] = useState(null);
+  const [estLoading, setEstLoading] = useState(false);
+  const [estError, setEstError] = useState('');
+
+  const handleEstimate = async (e) => {
+    e.preventDefault();
+    if (!estForm.jobDescription.trim() || estForm.jobDescription.trim().length < 10) {
+      setEstError('Please describe the job in at least 10 characters.');
+      return;
+    }
+    setEstLoading(true);
+    setEstError('');
+    setEstResult(null);
+    try {
+      const res = await api.post('/estimate', estForm);
+      setEstResult(res.data.estimate);
+    } catch (err) {
+      setEstError(err.response?.data?.message || 'AI estimate unavailable. Please try again.');
+    } finally {
+      setEstLoading(false);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -94,8 +115,6 @@ export default function LandingPage() {
     navigate(`/helpers?category=${encodeURIComponent(cat)}`);
   };
 
-  // Estimated Price Calculation
-  const estimatedCost = calcCategory === 'AC Technician' ? calcHours * 600 : calcCategory === 'Electrician' ? calcHours * 500 : calcHours * 450;
 
   return (
     <div>
@@ -362,46 +381,95 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* AI COST ESTIMATOR INTERACTIVE WIDGET */}
-          <div className="card card-body ai-calculator-widget max-w-xl" style={{ margin: '0 auto', border: '2px solid #FFDCD4' }}>
-            <div className="flex items-center gap-2 mb-4">
+          {/* ====== AI COST ESTIMATOR — Powered by Claude (Anthropic) ====== */}
+          <form onSubmit={handleEstimate} className="card card-body ai-calculator-widget" style={{ margin: '0 auto', maxWidth: 600, border: '2px solid #FFDCD4' }}>
+            <div className="flex items-center gap-2 mb-2">
               <Sparkles size={22} className="text-primary" />
-              <h3 style={{ fontSize: '19px', fontWeight: 900 }}>Instant AI Cost Calculator</h3>
+              <h3 style={{ fontSize: '19px', fontWeight: 900 }}>AI Cost Estimator</h3>
+              <span className="badge badge-primary" style={{ marginLeft: 'auto', fontSize: 11 }}>✨ Powered by Claude AI</span>
             </div>
+            <p className="text-secondary" style={{ fontSize: 13, marginBottom: 16 }}>Describe your job and get an instant AI-powered price estimate based on real Indian market rates.</p>
 
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-2 gap-3 mb-3">
               <div>
-                <label className="form-label">Service Category</label>
-                <select className="form-select" value={calcCategory} onChange={e => setCalcCategory(e.target.value)}>
-                  <option value="Plumber">Plumbing Repair</option>
-                  <option value="Electrician">Electrical Wiring</option>
-                  <option value="AC Technician">AC Installation</option>
-                  <option value="Painter">Painting Service</option>
+                <label className="form-label">Service Type</label>
+                <select
+                  className="form-select"
+                  value={estForm.serviceType}
+                  onChange={e => setEstForm(f => ({ ...f, serviceType: e.target.value }))}
+                >
+                  {['Plumber','Electrician','Carpenter','Painter','AC Technician','Cleaner','Mechanic','Gardener','General Repair'].map(s => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
                 </select>
               </div>
               <div>
-                <label className="form-label">Estimated Work Hours</label>
-                <select className="form-select" value={calcHours} onChange={e => setCalcHours(Number(e.target.value))}>
-                  <option value={1}>1 Hour</option>
-                  <option value={2}>2 Hours</option>
-                  <option value={3}>3 Hours</option>
-                  <option value={5}>5 Hours (Half Day)</option>
+                <label className="form-label">City</label>
+                <select
+                  className="form-select"
+                  value={estForm.city}
+                  onChange={e => setEstForm(f => ({ ...f, city: e.target.value }))}
+                >
+                  {['Mumbai','Delhi','Bangalore','Chennai','Hyderabad','Pune','Kolkata','Ahmedabad','Jaipur'].map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
                 </select>
               </div>
             </div>
 
-            <div className="calc-result-box flex justify-between items-center">
-              <div>
-                <span className="text-xs text-muted font-bold">ESTIMATED PRICE RANGE</span>
-                <p style={{ fontSize: '24px', fontWeight: 900, color: 'var(--color-primary)', fontFamily: 'Poppins, sans-serif' }}>
-                  ₹{estimatedCost} - ₹{estimatedCost + 150}
+            <div className="mb-3">
+              <label className="form-label">Job Description <span style={{ color: 'var(--color-outline)', fontWeight: 400 }}>(what needs to be done?)</span></label>
+              <textarea
+                className="form-input"
+                rows={3}
+                placeholder="e.g. Kitchen sink pipe is leaking under the counter, water dripping onto the cabinet floor..."
+                value={estForm.jobDescription}
+                onChange={e => setEstForm(f => ({ ...f, jobDescription: e.target.value }))}
+                style={{ resize: 'vertical', fontFamily: 'inherit' }}
+              />
+            </div>
+
+            {estError && (
+              <div style={{ background: '#FFF0ED', border: '1px solid #FFC4B6', borderRadius: 8, padding: '10px 14px', color: '#C0392B', fontSize: 13, marginBottom: 12 }}>
+                ⚠️ {estError}
+              </div>
+            )}
+
+            {estResult && !estLoading && (
+              <div className="calc-result-box" style={{ marginBottom: 12 }}>
+                <div className="flex justify-between items-start" style={{ flexWrap: 'wrap', gap: 8 }}>
+                  <div>
+                    <span className="text-xs text-muted font-bold">AI ESTIMATED PRICE RANGE</span>
+                    <p style={{ fontSize: '26px', fontWeight: 900, color: 'var(--color-primary)', fontFamily: 'Poppins, sans-serif', lineHeight: 1.2 }}>
+                      ₹{estResult.min_cost.toLocaleString('en-IN')} – ₹{estResult.max_cost.toLocaleString('en-IN')}
+                    </p>
+                  </div>
+                  <span className="badge" style={{
+                    background: estResult.confidence === 'high' ? '#D1FAE5' : estResult.confidence === 'medium' ? '#FEF3C7' : '#FEE2E2',
+                    color: estResult.confidence === 'high' ? '#065F46' : estResult.confidence === 'medium' ? '#92400E' : '#991B1B',
+                    fontWeight: 700, fontSize: 12, padding: '4px 10px'
+                  }}>
+                    {estResult.confidence === 'high' ? '✓ High Confidence' : estResult.confidence === 'medium' ? '~ Medium Confidence' : '! Low Confidence'}
+                  </span>
+                </div>
+                <p style={{ fontSize: 13, color: 'var(--color-on-surface-variant)', marginTop: 8, lineHeight: 1.5 }}>
+                  💡 {estResult.reasoning}
                 </p>
+                <button type="button" className="btn btn-primary btn-sm" style={{ marginTop: 10 }} onClick={() => handleCategoryClick(estForm.serviceType)}>
+                  Book a {estForm.serviceType} →
+                </button>
               </div>
-              <button className="btn btn-primary btn-sm" onClick={() => handleCategoryClick(calcCategory)}>
-                Book at This Rate →
-              </button>
-            </div>
-          </div>
+            )}
+
+            <button type="submit" className="btn btn-primary w-full" disabled={estLoading}>
+              {estLoading ? (
+                <span style={{ display: 'flex', alignItems: 'center', gap: 8, justifyContent: 'center' }}>
+                  <span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,0.4)', borderTopColor: 'white', borderRadius: '50%', animation: 'spin 0.8s linear infinite', display: 'inline-block' }} />
+                  Getting AI Estimate...
+                </span>
+              ) : '✨ Get AI Cost Estimate'}
+            </button>
+          </form>
         </div>
       </section>
 

@@ -11,6 +11,7 @@ const hireRoutes = require('./routes/hireRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const reviewRoutes = require('./routes/reviewRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const estimateRoutes = require('./routes/estimateRoutes');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use('/api/v1/hire', hireRoutes);
 app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/review', reviewRoutes);
 app.use('/api/v1/admin', adminRoutes);
+app.use('/api/v1/estimate', estimateRoutes);
 
 // 404 handler
 app.use((req, res) => {
