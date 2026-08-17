@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HelperHub - Access Your Account</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#d6e3f7",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e1e2e4",
+                    "on-primary-container": "#c4d2ff",
+                    "on-secondary-container": "#596576",
+                    "on-surface-variant": "#434654",
+                    "surface": "#f8f9fb",
+                    "surface-container-high": "#e7e8ea",
+                    "secondary-fixed-dim": "#bbc7db",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d9dadc",
+                    "inverse-primary": "#b2c5ff",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#004e32",
+                    "surface-container-highest": "#e1e2e4",
+                    "error": "#ba1a1a",
+                    "primary-container": "#0052cc",
+                    "surface-bright": "#f8f9fb",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#002113",
+                    "secondary-container": "#d6e3f7",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "on-secondary-fixed-variant": "#3b4858",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f4f6",
+                    "secondary": "#535f70",
+                    "surface-container": "#edeef0",
+                    "on-primary-fixed": "#001848",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "primary-fixed": "#dae2ff",
+                    "outline": "#737685",
+                    "on-tertiary-container": "#72e9af",
+                    "outline-variant": "#c3c6d6",
+                    "on-surface": "#191c1e",
+                    "tertiary-container": "#006844",
+                    "inverse-on-surface": "#f0f1f3",
+                    "background": "#f8f9fb",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2e3132",
+                    "on-secondary-fixed": "#101c2b",
+                    "on-secondary": "#ffffff",
+                    "primary": "#003d9b",
+                    "tertiary-fixed-dim": "#65dca4",
+                    "surface-tint": "#0c56d0",
+                    "tertiary-fixed": "#82f9be"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "base": "4px",
+                    "container-max": "1280px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "2xl": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: #003d9b;
+            box-shadow: 0 0 0 2px rgba(0, 61, 155, 0.1);
+        }
+        .step-transition {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- Auth Layout Wrapper -->
+<main class="min-h-screen flex items-center justify-center p-md md:p-xl relative overflow-hidden">
+<!-- Background Elements -->
+<div class="absolute inset-0 pointer-events-none opacity-30">
+<div class="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] bg-primary-container blur-[120px] rounded-full"></div>
+<div class="absolute -bottom-[10%] -right-[5%] w-[40%] h-[40%] bg-secondary-container blur-[120px] rounded-full"></div>
+</div>
+<!-- Auth Card -->
+<div class="relative w-full max-w-[480px] bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant overflow-hidden">
+<!-- Brand Logo Center -->
+<div class="pt-xl px-xl text-center">
+<span class="font-headline-md text-headline-md font-bold text-primary">HelperHub</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-xs">Professional Home Services Marketplace</p>
+</div>
+<div class="p-xl">
+<!-- Auth Step Container -->
+<div class="relative" id="auth-flow-container">
+<!-- STEP 1: LOGIN/SIGNUP -->
+<div class="step-transition" id="step-auth">
+<div class="space-y-lg">
+<!-- Role Selection Cards -->
+<div class="grid grid-cols-2 gap-md">
+<button class="role-card group flex flex-col items-center p-lg rounded-lg border-2 border-outline-variant bg-surface-container hover:border-primary transition-all duration-200" id="role-hire" onclick="selectRole('hire')" type="button">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center mb-sm group-[.active]:bg-primary group-[.active]:text-on-primary">
+<span class="material-symbols-outlined text-headline-sm">person_search</span>
+</div>
+<span class="font-label-md text-label-md text-center text-on-surface">I'm looking to hire</span>
+</button>
+<button class="role-card group flex flex-col items-center p-lg rounded-lg border-2 border-outline-variant bg-surface-container hover:border-primary transition-all duration-200" id="role-work" onclick="selectRole('work')" type="button">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center mb-sm group-[.active]:bg-primary group-[.active]:text-on-primary">
+<span class="material-symbols-outlined text-headline-sm">home_repair_service</span>
+</div>
+<span class="font-label-md text-label-md text-center text-on-surface">I'm looking for work</span>
+</button>
+</div>
+<!-- Social Login -->
+<div class="space-y-md">
+<button class="w-full flex items-center justify-center gap-md px-lg h-12 bg-surface border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                                    Sign in with Google
+                                </button>
+</div>
+<div class="relative flex items-center py-sm">
+<div class="flex-grow border-t border-outline-variant"></div>
+<span class="flex-shrink mx-md font-label-sm text-label-sm text-outline">OR CONTINUE WITH EMAIL</span>
+<div class="flex-grow border-t border-outline-variant"></div>
+</div>
+<!-- Form -->
+<form class="space-y-md" id="auth-form" onsubmit="handleInitialAuth(event)">
+<div class="space-y-xs">
+<label class="font-label-md text-label-md text-on-surface-variant block">Email Address</label>
+<input class="w-full px-lg h-12 rounded-lg border border-outline-variant bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="name@company.com" required="" type="email"/>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-md text-label-md text-on-surface-variant block">Password</label>
+<button class="font-label-sm text-label-sm text-primary hover:underline" type="button">Forgot?</button>
+</div>
+<input class="w-full px-lg h-12 rounded-lg border border-outline-variant bg-surface focus:ring-2 focus:ring-primary focus:border-primary transition-all" placeholder="••••••••" required="" type="password"/>
+</div>
+<button class="w-full bg-primary text-on-primary h-12 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm" type="submit">
+                                    Continue
+                                </button>
+</form>
+</div>
+</div>
+<!-- STEP 2: OTP VERIFICATION (Hidden initially) -->
+<div class="step-transition hidden translate-x-12 opacity-0" id="step-otp">
+<div class="space-y-lg text-center">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-container text-primary mb-md">
+<span class="material-symbols-outlined text-headline-md">security</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Verify your identity</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm px-md">
+                                    We've sent a 6-digit verification code to your email address. Enter it below to secure your account.
+                                </p>
+</div>
+<form class="space-y-xl" onsubmit="handleVerifyOTP(event)">
+<div class="flex justify-center gap-sm" id="otp-inputs">
+<input class="otp-input w-12 h-14 text-center text-headline-sm font-bold bg-surface border border-outline-variant rounded-lg transition-all" maxlength="1" required="" type="text"/>
+<input class="otp-input w-12 h-14 text-center text-headline-sm font-bold bg-surface border border-outline-variant rounded-lg transition-all" maxlength="1" required="" type="text"/>
+<input class="otp-input w-12 h-14 text-center text-headline-sm font-bold bg-surface border border-outline-variant rounded-lg transition-all" maxlength="1" required="" type="text"/>
+<input class="otp-input w-12 h-14 text-center text-headline-sm font-bold bg-surface border border-outline-variant rounded-lg transition-all" maxlength="1" required="" type="text"/>
+<input class="otp-input w-12 h-14 text-center text-headline-sm font-bold bg-surface border border-outline-variant rounded-lg transition-all" maxlength="1" required="" type="text"/>
+<input class="otp-input w-12 h-14 text-center text-headline-sm font-bold bg-surface border border-outline-variant rounded-lg transition-all" maxlength="1" required="" type="text"/>
+</div>
+<div class="space-y-md">
+<button class="w-full bg-primary text-on-primary h-12 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity shadow-sm" type="submit">
+                                        Verify &amp; Sign In
+                                    </button>
+<button class="text-on-surface-variant font-label-sm text-label-sm hover:text-primary transition-colors" onclick="backToStep1()" type="button">
+                                        Try another way or change email
+                                    </button>
+</div>
+</form>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                                Didn't receive a code? <button class="text-primary font-label-sm hover:underline">Resend code</button>
+</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer area -->
+<div class="px-xl pb-xl pt-sm text-center">
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                    By continuing, you agree to HelperHub’s <a class="text-primary hover:underline" href="#">Terms of Service</a> and <a class="text-primary hover:underline" href="#">Privacy Policy</a>.
+                </p>
+</div>
+</div>
+</main>
+<script>
+        let currentRole = 'hire';
+
+        function selectRole(role) {
+            currentRole = role;
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('active', 'border-primary', 'bg-primary-container/20');
+                card.classList.add('border-outline-variant', 'bg-surface-container');
+            });
+            const activeCard = document.getElementById(`role-${role}`);
+            activeCard.classList.add('active', 'border-primary', 'bg-primary-container/20');
+            activeCard.classList.remove('border-outline-variant', 'bg-surface-container');
+        }
+
+        // Initialize first role
+        selectRole('hire');
+
+        function handleInitialAuth(e) {
+            e.preventDefault();
+            const step1 = document.getElementById('step-auth');
+            const step2 = document.getElementById('step-otp');
+
+            // Transition out Step 1
+            step1.classList.add('-translate-x-12', 'opacity-0');
+            setTimeout(() => {
+                step1.classList.add('hidden');
+                step2.classList.remove('hidden');
+                // Trigger reflow for transition
+                step2.offsetHeight; 
+                step2.classList.remove('translate-x-12', 'opacity-0');
+            }, 400);
+        }
+
+        function backToStep1() {
+            const step1 = document.getElementById('step-auth');
+            const step2 = document.getElementById('step-otp');
+
+            step2.classList.add('translate-x-12', 'opacity-0');
+            setTimeout(() => {
+                step2.classList.add('hidden');
+                step1.classList.remove('hidden');
+                step1.offsetHeight;
+                step1.classList.remove('-translate-x-12', 'opacity-0');
+            }, 400);
+        }
+
+        function handleVerifyOTP(e) {
+            e.preventDefault();
+            // Final success feedback or redirection logic
+            alert('Authentication successful! Welcome to HelperHub.');
+        }
+
+        // OTP Input Auto-focus Logic
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+</body></html>

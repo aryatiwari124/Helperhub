@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Helper Profile | HelperHub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#d6e3f7",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e1e2e4",
+                    "on-primary-container": "#c4d2ff",
+                    "on-secondary-container": "#596576",
+                    "on-surface-variant": "#434654",
+                    "surface": "#f8f9fb",
+                    "surface-container-high": "#e7e8ea",
+                    "secondary-fixed-dim": "#bbc7db",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d9dadc",
+                    "inverse-primary": "#b2c5ff",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#004e32",
+                    "surface-container-highest": "#e1e2e4",
+                    "error": "#ba1a1a",
+                    "primary-container": "#0052cc",
+                    "surface-bright": "#f8f9fb",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#002113",
+                    "secondary-container": "#d6e3f7",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "on-secondary-fixed-variant": "#3b4858",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f4f6",
+                    "secondary": "#535f70",
+                    "surface-container": "#edeef0",
+                    "on-primary-fixed": "#001848",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "primary-fixed": "#dae2ff",
+                    "outline": "#737685",
+                    "on-tertiary-container": "#72e9af",
+                    "outline-variant": "#c3c6d6",
+                    "on-surface": "#191c1e",
+                    "tertiary-container": "#006844",
+                    "inverse-on-surface": "#f0f1f3",
+                    "background": "#f8f9fb",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2e3132",
+                    "on-secondary-fixed": "#101c2b",
+                    "on-secondary": "#ffffff",
+                    "primary": "#003d9b",
+                    "tertiary-fixed-dim": "#65dca4",
+                    "surface-tint": "#0c56d0",
+                    "tertiary-fixed": "#82f9be"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "base": "4px",
+                    "container-max": "1280px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "2xl": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fb;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Top Navigation Bar -->
+<header class="bg-surface shadow-sm sticky top-0 z-50 transition-all duration-200 ease-in-out">
+<div class="flex justify-between items-center w-full px-lg max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-xl">
+<a class="font-headline-md text-headline-md font-bold text-primary" href="#">HelperHub</a>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="text-primary border-b-2 border-primary font-label-md py-5" href="#">Find a Helper</a>
+<a class="text-on-secondary-container font-label-md hover:text-primary transition-colors py-5" href="#">Find Work</a>
+<a class="text-on-secondary-container font-label-md hover:text-primary transition-colors py-5" href="#">How it Works</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container rounded-full">search</button>
+<div class="flex items-center gap-sm bg-primary px-md py-sm rounded-full text-white font-label-md cursor-pointer hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[20px]">account_circle</span>
+<span>Profile/Login</span>
+</div>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-lg py-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Profile Main Content -->
+<div class="lg:col-span-8 space-y-lg">
+<!-- Hero Header Card -->
+<section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant">
+<div class="h-48 md:h-64 relative">
+<div class="bg-cover bg-center w-full h-full opacity-30 grayscale" data-alt="A cinematic wide shot of a modern, clean residential interior with warm ambient lighting, emphasizing professional home maintenance and repair services. The background is softly blurred to create depth, focusing on high-quality architectural details. The aesthetic is bright, professional, and reliable, utilizing a crisp white and trust-blue color palette." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAri-5xRhvKBV3EPG2pz3wlBiPp4_VD5ZHmKw1Ew_gYtfOY5R9Iil4WsromF52fa1L8Dqqt1hRFNQCWOupW2Cfa9YjQi29zD4XO0C8Hvi7C69tgSQF86rdVK1iJo4gDcHhXWw1-JRKZpyB1v5s-m_jbvFapwfe0KlUmgV8d2f8qiNPQyBy0x-Y9dJtvKNlza7xlJeEgPLR4Q2qjIGTixWk5K3RfZr1_g0tGCDETCqjJxSUCXilXlPO4xg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest to-transparent"></div>
+</div>
+<div class="px-xl pb-xl -mt-20 relative z-10 flex flex-col md:flex-row gap-lg items-end md:items-center justify-between">
+<div class="flex flex-col md:flex-row gap-lg items-start md:items-center">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-xl border-4 border-surface-container-lowest overflow-hidden shadow-lg">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a friendly middle-aged male electrician in a clean blue utility shirt, smiling confidently. He is standing against a neutral, well-lit studio background. The lighting is soft and professional, highlighting his approachable and experienced demeanor, perfectly fitting the modern minimalism and trust-focused UI of HelperHub." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc_CiCrIkQo3yIQEKfoxSbVMufC5vTN-4Y7r4xXDKKuZa87Ud3VBbEQmKnLP29t_rmQpWY-lCD9ZR9TaAfmMXrEZm6c_qFYchOyQw--MJGnfi5oKnLX_ZNFIwyZLPphU1JVYafUTQj5S8Y3dp9tuUCwCASiaOtkZ0Q8sy0CSAo41woZdpBMBYrAgfS6xAQmD75V2eQodV_myIy340D6prH84BLV14HJlPiHz9DLlWbwrrxn31ceNzmzw"/>
+</div>
+<div class="pt-4 md:pt-16">
+<div class="flex items-center gap-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Marcus Sterling</h1>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-on-surface-variant font-body-lg">Master Electrician • Residential Specialist</p>
+<div class="flex items-center gap-xs mt-2 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-label-md">4.9 (124 reviews)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Information Grid (Bento Style) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<!-- Bio Section -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant md:col-span-2">
+<h2 class="font-headline-sm text-headline-sm mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">description</span>
+                            About Marcus
+                        </h2>
+<p class="text-on-surface-variant font-body-md leading-relaxed">
+                            Experienced electrician with 10+ years in residential repairs. I specialize in diagnosing complex electrical issues, upgrading aging panels, and installing modern smart home lighting solutions. My priority is safety and efficiency, ensuring every job meets local codes while providing a seamless experience for my clients. Professional, punctual, and highly detail-oriented.
+                        </p>
+</section>
+<!-- Skills & Tags -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant">
+<h2 class="font-headline-sm text-headline-sm mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">construction</span>
+                            Expertise
+                        </h2>
+<div class="flex flex-wrap gap-sm">
+<span class="px-md py-sm bg-secondary-container text-on-secondary-fixed-variant rounded-full font-label-md">Wiring</span>
+<span class="px-md py-sm bg-secondary-container text-on-secondary-fixed-variant rounded-full font-label-md">Panel Upgrades</span>
+<span class="px-md py-sm bg-secondary-container text-on-secondary-fixed-variant rounded-full font-label-md">Lighting</span>
+<span class="px-md py-sm bg-secondary-container text-on-secondary-fixed-variant rounded-full font-label-md">Troubleshooting</span>
+<span class="px-md py-sm bg-secondary-container text-on-secondary-fixed-variant rounded-full font-label-md">Smart Home</span>
+</div>
+</section>
+<!-- Service Area -->
+<section class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant">
+<h2 class="font-headline-sm text-headline-sm mb-md flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">map</span>
+                            Service Area
+                        </h2>
+<p class="text-on-surface-variant font-body-md mb-md">Within 20 miles of Downtown. Providing fast response times for local residents.</p>
+<div class="w-full h-32 rounded-lg bg-surface-container border border-outline-variant relative overflow-hidden">
+<div class="w-full h-full opacity-60" data-location="Downtown" style="">
+<!-- Simple representation of a map grid -->
+<div class="absolute inset-0 grid grid-cols-6 grid-rows-4">
+<div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-b border-outline-variant/30"></div>
+<div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-b border-outline-variant/30"></div>
+<div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-r border-b border-outline-variant/30"></div><div class="border-b border-outline-variant/30"></div>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Reviews Section -->
+<section class="bg-surface-container-lowest p-xl rounded-xl shadow-sm border border-outline-variant">
+<div class="flex justify-between items-center mb-xl">
+<h2 class="font-headline-sm text-headline-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">reviews</span>
+                            Client Experiences
+                        </h2>
+<button class="text-primary font-label-md hover:underline">View All</button>
+</div>
+<div class="space-y-lg">
+<!-- Review Item 1 -->
+<div class="border-b border-outline-variant pb-lg">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold text-on-secondary-container">SH</div>
+<div>
+<h4 class="font-label-md">Sarah Henderson</h4>
+<p class="text-xs text-on-surface-variant">2 days ago</p>
+</div>
+</div>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-sm leading-relaxed">Marcus was fantastic! He arrived exactly on time and fixed a complex wiring issue in our kitchen that two other electricians couldn't solve. Clean, professional, and explained everything clearly.</p>
+</div>
+<!-- Review Item 2 -->
+<div class="pb-base">
+<div class="flex justify-between items-start mb-sm">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-bold">JM</div>
+<div>
+<h4 class="font-label-md">James Miller</h4>
+<p class="text-xs text-on-surface-variant">1 week ago</p>
+</div>
+</div>
+<div class="flex text-primary">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-sm">star</span>
+</div>
+</div>
+<p class="text-on-surface-variant font-body-sm leading-relaxed">Great panel upgrade service. Very knowledgeable about local codes. Price was fair and the work area was left spotless.</p>
+</div>
+</div>
+</section>
+</div>
+<!-- Booking Sidebar -->
+<aside class="lg:col-span-4">
+<div class="sticky top-24 space-y-md">
+<div class="bg-surface-container-lowest p-xl rounded-xl shadow-lg border border-outline-variant">
+<div class="flex justify-between items-baseline mb-lg">
+<span class="text-on-surface-variant font-body-md">Hourly Rate</span>
+<div class="text-right">
+<span class="font-headline-md text-headline-md text-primary">$45</span>
+<span class="font-label-md text-on-surface-variant">/hr</span>
+</div>
+</div>
+<div class="space-y-md mb-xl">
+<div class="flex items-center gap-md p-md bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary">calendar_today</span>
+<div>
+<p class="text-xs text-on-surface-variant font-label-sm uppercase tracking-wider">Availability</p>
+<p class="font-label-md">Mon - Fri, 8:00 AM - 6:00 PM</p>
+</div>
+</div>
+<div class="flex items-center gap-md p-md bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<div>
+<p class="text-xs text-on-surface-variant font-label-sm uppercase tracking-wider">Response Time</p>
+<p class="font-label-md">Usually within 2 hours</p>
+</div>
+</div>
+</div>
+<button class="w-full py-md bg-primary-container text-white font-label-md rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-sm shadow-sm">
+<span>Hire Now</span>
+<span class="material-symbols-outlined">bolt</span>
+</button>
+<button class="w-full mt-md py-md bg-secondary-container text-primary font-label-md rounded-xl hover:bg-secondary-fixed transition-colors border border-outline-variant/20">
+                            Save for Later
+                        </button>
+<div class="mt-xl pt-lg border-t border-outline-variant text-center">
+<p class="text-on-surface-variant font-body-sm mb-sm italic">"100% Satisfaction Guaranteed"</p>
+<div class="flex justify-center gap-md text-on-surface-variant">
+<span class="material-symbols-outlined text-xl">verified_user</span>
+<span class="material-symbols-outlined text-xl">security</span>
+<span class="material-symbols-outlined text-xl">payments</span>
+</div>
+</div>
+</div>
+<!-- Additional Sidebar Info -->
+<div class="bg-surface-container-lowest p-lg rounded-xl shadow-sm border border-outline-variant">
+<h3 class="font-label-md mb-sm">Verification Details</h3>
+<ul class="space-y-sm">
+<li class="flex items-center gap-sm text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                License: #EL-882390-2024
+                            </li>
+<li class="flex items-center gap-sm text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Fully Insured ($2M Liability)
+                            </li>
+<li class="flex items-center gap-sm text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+                                Background Checked
+                            </li>
+</ul>
+</div>
+</div>
+</aside>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant mt-3xl">
+<div class="w-full py-xl px-lg max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-xl">
+<div class="flex flex-col items-center md:items-start gap-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-primary">HelperHub</span>
+<p class="font-body-sm text-on-surface-variant text-center md:text-left">© 2024 HelperHub. Professional Home Services Marketplace.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Categories</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Company Info</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-colors" href="#">Help Center</a>
+</div>
+</div>
+</footer>
+<!-- Floating Action Button for Mobile -->
+<div class="fixed bottom-gutter right-gutter md:hidden z-50">
+<button class="flex items-center justify-center w-14 h-14 bg-primary text-white rounded-full shadow-2xl hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined">message</span>
+</button>
+</div>
+<script>
+        // Simple scroll behavior for header
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md');
+                header.classList.remove('shadow-sm');
+            } else {
+                header.classList.add('shadow-sm');
+                header.classList.remove('shadow-md');
+            }
+        });
+    </script>
+</body></html>

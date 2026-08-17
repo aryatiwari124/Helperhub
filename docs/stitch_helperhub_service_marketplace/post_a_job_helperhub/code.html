@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post a Job - HelperHub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#d6e3f7",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e1e2e4",
+                    "on-primary-container": "#c4d2ff",
+                    "on-secondary-container": "#596576",
+                    "on-surface-variant": "#434654",
+                    "surface": "#f8f9fb",
+                    "surface-container-high": "#e7e8ea",
+                    "secondary-fixed-dim": "#bbc7db",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d9dadc",
+                    "inverse-primary": "#b2c5ff",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#004e32",
+                    "surface-container-highest": "#e1e2e4",
+                    "error": "#ba1a1a",
+                    "primary-container": "#0052cc",
+                    "surface-bright": "#f8f9fb",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#002113",
+                    "secondary-container": "#d6e3f7",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "on-secondary-fixed-variant": "#3b4858",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f4f6",
+                    "secondary": "#535f70",
+                    "surface-container": "#edeef0",
+                    "on-primary-fixed": "#001848",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "primary-fixed": "#dae2ff",
+                    "outline": "#737685",
+                    "on-tertiary-container": "#72e9af",
+                    "outline-variant": "#c3c6d6",
+                    "on-surface": "#191c1e",
+                    "tertiary-container": "#006844",
+                    "inverse-on-surface": "#f0f1f3",
+                    "background": "#f8f9fb",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2e3132",
+                    "on-secondary-fixed": "#101c2b",
+                    "on-secondary": "#ffffff",
+                    "primary": "#003d9b",
+                    "tertiary-fixed-dim": "#65dca4",
+                    "surface-tint": "#0c56d0",
+                    "tertiary-fixed": "#82f9be"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "base": "4px",
+                    "container-max": "1280px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "2xl": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .form-focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 61, 155, 0.15);
+            border-color: #003d9b;
+        }
+        .step-transition { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(235, 237, 240, 1);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- Top Navigation Anchor -->
+<header class="bg-surface dark:bg-surface-container-low shadow-sm sticky top-0 z-50">
+<nav class="flex justify-between items-center w-full px-lg max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-xl">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">HelperHub</span>
+<div class="hidden md:flex items-center gap-lg">
+<a class="text-on-secondary-container dark:text-on-secondary-fixed-variant font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Find a Helper</a>
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-md transition-colors" href="#">Find Work</a>
+<a class="text-on-secondary-container dark:text-on-secondary-fixed-variant font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">How it Works</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="font-label-md text-label-md text-primary px-md py-sm hover:bg-secondary-container rounded-lg transition-all">Profile/Login</button>
+</div>
+</nav>
+</header>
+<main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl">
+<!-- Left Side: Instructional Content & Progress (Bento Style) -->
+<div class="lg:col-span-4 space-y-lg">
+<div class="glass-panel p-lg rounded-xl shadow-sm">
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-md">Post your job in minutes</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Connect with top-rated professionals in your area. Detail your needs, set your budget, and get quotes fast.</p>
+</div>
+<div class="hidden lg:block glass-panel p-lg rounded-xl shadow-sm space-y-md">
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-label-md">1</div>
+<span class="font-label-md text-label-md text-on-surface">Job Essentials</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md">2</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Location &amp; Time</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high text-on-surface-variant flex items-center justify-center font-label-md">3</div>
+<span class="font-label-md text-label-md text-on-surface-variant">Budget &amp; Confirm</span>
+</div>
+</div>
+<div class="h-64 rounded-xl overflow-hidden relative shadow-sm group">
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A clean, modern home interior featuring a bright living room with soft blue accents, professional renovation tools neatly organized on a wooden floor, and warm natural sunlight streaming through large windows. The overall aesthetic is professional, trustworthy, and evokes a sense of high-quality home maintenance and care." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9OKJ85TeEOC8RuEr4cPz_20WJ3nV2SCjbk1ikAkw1A31ZHl5-CwgrLJtGS-r9hTgykCDvSw9ZOJWTWdLktvA3HE5BJ_JHmOvgKnrCXgiAeW93dCC01bEtQ8S4lSMHxlBVfGM0DjMmaamyD-P8r3dx86d36YPZqIp7DuMiXGDpWuEtYWvaaM0v0nk26vs7HJdgfaTGMCHdmhk-ptdfFi0pw7y_07kkfpVlAHLZjrkO7efXmUgeTMcaGw"/>
+<div class="absolute bottom-md left-md z-20">
+<p class="text-white font-label-md">Trusted by 50k+ Homeowners</p>
+</div>
+</div>
+</div>
+<!-- Right Side: The Form -->
+<div class="lg:col-span-8">
+<form class="bg-surface-container-lowest p-xl rounded-xl shadow-sm border border-outline-variant/30 space-y-xl" id="postJobForm">
+<!-- Section 1: Core Details -->
+<section class="space-y-lg">
+<div class="border-b border-outline-variant pb-md">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Job Details</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface">Category</label>
+<div class="relative">
+<select class="w-full h-12 px-md bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface appearance-none form-focus-ring">
+<option disabled="" selected="" value="">Select a service</option>
+<option value="plumber">Plumber</option>
+<option value="electrician">Electrician</option>
+<option value="carpenter">Carpenter</option>
+<option value="cleaner">Professional Cleaner</option>
+<option value="gardener">Gardener/Landscaper</option>
+<option value="painter">Painter</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface">Job Title</label>
+<input class="w-full h-12 px-md bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface form-focus-ring" placeholder="e.g. Leaking kitchen faucet repair" type="text"/>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface">Description</label>
+<textarea class="w-full px-md py-sm bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface form-focus-ring resize-none" placeholder="Describe the problem in detail. Mention any specific parts or requirements..." rows="4"></textarea>
+</div>
+</section>
+<!-- Section 2: Logistics -->
+<section class="space-y-lg pt-md">
+<div class="border-b border-outline-variant pb-md">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Location &amp; Schedule</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface">Location</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">location_on</span>
+<input class="w-full h-12 pl-xl pr-md bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface form-focus-ring" placeholder="Enter your city or zip code" type="text"/>
+</div>
+<div class="mt-sm h-32 w-full rounded-lg overflow-hidden border border-outline-variant">
+<div class="w-full h-full bg-surface-container-high flex items-center justify-center relative overflow-hidden">
+<img class="w-full h-full object-cover opacity-70 grayscale contrast-125" data-location="London" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1Gxt1NL0lzt8--Ts8OFATP3CK5alYwFndBOA3wBlCWTq8OUwz3dHVwcUTbjiWWYIQGf4ltGFJ05vrCEoHz-MHvIHHrjTzfdSbjB5X911YHXOu3fwQTB2-nrl7eDEBsKGdxH_kMZJkpeIhORUmWrJGDX8bl2kv9jYepW_L63JZBlb0kA4filPu3PXo1QT36S0X-Zqi5KfDssWb6C74Cq7mi6dgcQP5WhNf33gIKf7QlNFZ5hM9YojHPA"/>
+<div class="absolute inset-0 bg-primary/5"></div>
+<div class="relative z-10 flex flex-col items-center">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-lg">
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface">Preferred Date</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">calendar_today</span>
+<input class="w-full h-12 pl-xl pr-md bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface form-focus-ring" type="date"/>
+</div>
+</div>
+<div class="space-y-sm">
+<label class="font-label-md text-label-md text-on-surface">Estimated Budget ($)</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">payments</span>
+<input class="w-full h-12 pl-xl pr-md bg-surface border border-outline-variant rounded-lg font-body-md text-on-surface form-focus-ring" placeholder="Enter amount" type="number"/>
+</div>
+<p class="text-label-sm font-label-sm text-on-surface-variant">Average for this job: $80 - $150</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Submit Action -->
+<div class="pt-lg flex items-center justify-end gap-md">
+<button class="px-xl h-12 rounded-full font-label-md text-label-md text-primary bg-secondary-container hover:bg-secondary-fixed transition-all" type="button">Save as Draft</button>
+<button class="px-2xl h-12 rounded-full font-label-md text-label-md bg-primary text-white shadow-lg hover:shadow-xl hover:translate-y-[-2px] transition-all flex items-center gap-sm" type="submit">
+                            Post Job
+                            <span class="material-symbols-outlined text-md">send</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</main>
+<!-- Footer Anchor -->
+<footer class="bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant mt-3xl">
+<div class="w-full py-xl px-lg max-w-container-max mx-auto flex flex-col md:flex-row justify-between items-center gap-lg">
+<div class="flex flex-col gap-xs">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">HelperHub</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant opacity-100 hover:opacity-80 transition-opacity">© 2024 HelperHub. Professional Home Services Marketplace.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Categories</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Company Info</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Privacy Policy</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary dark:hover:text-primary-fixed-dim transition-colors" href="#">Help Center</a>
+</div>
+</div>
+</footer>
+<script>
+        // Simple form interaction
+        document.getElementById('postJobForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            const originalContent = btn.innerHTML;
+            
+            btn.disabled = true;
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Posting...`;
+            
+            setTimeout(() => {
+                btn.classList.replace('bg-primary', 'bg-tertiary');
+                btn.innerHTML = `<span class="material-symbols-outlined">check_circle</span> Success!`;
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    btn.classList.replace('bg-tertiary', 'bg-primary');
+                }, 2000);
+            }, 1500);
+        });
+
+        // Hover effect for map
+        const mapContainer = document.querySelector('.group');
+        if (mapContainer) {
+            mapContainer.addEventListener('mousemove', (e) => {
+                const { left, top, width, height } = mapContainer.getBoundingClientRect();
+                const x = (e.clientX - left) / width;
+                const y = (e.clientY - top) / height;
+                mapContainer.style.perspective = '1000px';
+                mapContainer.querySelector('img').style.transform = `scale(1.05) rotateY(${(x - 0.5) * 5}deg) rotateX(${(y - 0.5) * -5}deg)`;
+            });
+            mapContainer.addEventListener('mouseleave', () => {
+                mapContainer.querySelector('img').style.transform = `scale(1) rotateY(0) rotateX(0)`;
+            });
+        }
+    </script>
+</body></html>

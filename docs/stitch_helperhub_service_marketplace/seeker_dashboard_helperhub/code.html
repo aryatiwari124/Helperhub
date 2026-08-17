@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HelperHub | Job Seeker Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-fixed-variant": "#005235",
+                    "secondary-fixed": "#d6e3f7",
+                    "on-error": "#ffffff",
+                    "surface-variant": "#e1e2e4",
+                    "on-primary-container": "#c4d2ff",
+                    "on-secondary-container": "#596576",
+                    "on-surface-variant": "#434654",
+                    "surface": "#f8f9fb",
+                    "surface-container-high": "#e7e8ea",
+                    "secondary-fixed-dim": "#bbc7db",
+                    "on-primary": "#ffffff",
+                    "surface-dim": "#d9dadc",
+                    "inverse-primary": "#b2c5ff",
+                    "on-error-container": "#93000a",
+                    "tertiary": "#004e32",
+                    "surface-container-highest": "#e1e2e4",
+                    "error": "#ba1a1a",
+                    "primary-container": "#0052cc",
+                    "surface-bright": "#f8f9fb",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "on-tertiary-fixed": "#002113",
+                    "secondary-container": "#d6e3f7",
+                    "primary-fixed-dim": "#b2c5ff",
+                    "on-secondary-fixed-variant": "#3b4858",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-low": "#f3f4f6",
+                    "secondary": "#535f70",
+                    "surface-container": "#edeef0",
+                    "on-primary-fixed": "#001848",
+                    "on-primary-fixed-variant": "#0040a2",
+                    "primary-fixed": "#dae2ff",
+                    "outline": "#737685",
+                    "on-tertiary-container": "#72e9af",
+                    "outline-variant": "#c3c6d6",
+                    "on-surface": "#191c1e",
+                    "tertiary-container": "#006844",
+                    "inverse-on-surface": "#f0f1f3",
+                    "background": "#f8f9fb",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#2e3132",
+                    "on-secondary-fixed": "#101c2b",
+                    "on-secondary": "#ffffff",
+                    "primary": "#003d9b",
+                    "tertiary-fixed-dim": "#65dca4",
+                    "surface-tint": "#0c56d0",
+                    "tertiary-fixed": "#82f9be"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "xl": "32px",
+                    "3xl": "64px",
+                    "base": "4px",
+                    "container-max": "1280px",
+                    "sm": "8px",
+                    "xs": "4px",
+                    "md": "16px",
+                    "lg": "24px",
+                    "2xl": "48px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Inter"],
+                    "label-sm": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-sm": ["Inter"],
+                    "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "16px", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface-container-low shadow-sm sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-lg max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-xl">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">HelperHub</span>
+<nav class="hidden md:flex gap-lg h-16">
+<a class="flex items-center text-on-secondary-container dark:text-on-secondary-fixed-variant font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Find a Helper</a>
+<a class="flex items-center text-primary dark:text-primary-fixed border-b-2 border-primary font-label-md" href="#">Find Work</a>
+<a class="flex items-center text-on-secondary-container dark:text-on-secondary-fixed-variant font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">How it Works</a>
+</nav>
+</div>
+<div class="flex items-center gap-md">
+<div class="hidden sm:flex bg-surface-container-high rounded-full px-md py-xs items-center gap-xs">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48" placeholder="Search tasks..." type="text"/>
+</div>
+<button class="flex items-center gap-xs font-label-md text-primary">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="hidden sm:inline">Profile</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-lg py-xl">
+<!-- Header Section -->
+<section class="mb-xl flex flex-col md:flex-row md:items-end justify-between gap-lg">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Welcome back, Alex</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Your local service market is active today.</p>
+</div>
+<!-- Summary Card -->
+<div class="bg-primary text-on-primary rounded-xl p-lg shadow-lg flex items-center gap-lg min-w-[280px]">
+<div class="bg-primary-container p-sm rounded-lg">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">payments</span>
+</div>
+<div>
+<p class="font-label-sm text-on-primary/80">Recent Earnings</p>
+<p class="font-headline-md text-headline-md">$1,200</p>
+</div>
+</div>
+</section>
+<!-- Dashboard Tabs -->
+<div class="flex flex-wrap gap-sm mb-lg border-b border-outline-variant">
+<button class="px-lg py-md font-label-md text-on-surface-variant hover:text-primary transition-all">My Profile</button>
+<button class="px-lg py-md font-label-md text-on-surface-variant hover:text-primary transition-all flex items-center gap-xs">
+                Incoming Requests
+                <span class="bg-error text-on-error text-[10px] px-1.5 py-0.5 rounded-full">3</span>
+</button>
+<button class="px-lg py-md font-label-md text-primary border-b-2 border-primary">Open Jobs Nearby</button>
+<button class="px-lg py-md font-label-md text-on-surface-variant hover:text-primary transition-all">Earnings</button>
+</div>
+<!-- Bento Layout / Content Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+<!-- Filter Sidebar (Mobile Hidden) -->
+<aside class="hidden lg:block lg:col-span-3 space-y-lg">
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-sm">
+<h3 class="font-label-md text-on-surface mb-md">Quick Filters</h3>
+<div class="space-y-md">
+<label class="flex items-center gap-sm cursor-pointer group">
+<input checked="" class="rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Plumbing</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input checked="" class="rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Electrical</span>
+</label>
+<label class="flex items-center gap-sm cursor-pointer group">
+<input class="rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-on-surface-variant group-hover:text-on-surface transition-colors">Handyman</span>
+</label>
+</div>
+</div>
+<div class="bg-secondary-container text-on-secondary-container rounded-xl p-lg border border-secondary-fixed-dim relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="font-headline-sm text-headline-sm mb-xs">Pro Membership</h3>
+<p class="font-body-sm text-on-secondary-container/80 mb-md">Unlock jobs with budgets over $500.</p>
+<button class="bg-primary text-on-primary px-md py-xs rounded-lg font-label-sm w-full">Upgrade Now</button>
+</div>
+<span class="material-symbols-outlined absolute -bottom-4 -right-4 text-8xl opacity-10 rotate-12">workspace_premium</span>
+</div>
+</aside>
+<!-- Jobs List -->
+<div class="lg:col-span-9 space-y-md">
+<!-- Job Card 1 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-lg group">
+<div class="flex gap-lg">
+<div class="w-16 h-16 rounded-lg bg-surface-container shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">plumbing</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-xs group-hover:text-primary transition-colors">Fix Leaking Sink</h4>
+<div class="flex flex-wrap gap-md items-center">
+<span class="flex items-center gap-1 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-[18px]">near_me</span>
+                                    2.5 miles away
+                                </span>
+<span class="flex items-center gap-1 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+                                    Posted 2h ago
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:items-end gap-sm w-full md:w-auto">
+<p class="font-headline-md text-headline-md text-on-surface">$150</p>
+<button class="bg-primary text-on-primary px-xl py-md rounded-lg font-label-md hover:bg-primary-container transition-colors w-full md:w-auto text-center">View Details</button>
+</div>
+</div>
+<!-- Job Card 2 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-lg group">
+<div class="flex gap-lg">
+<div class="w-16 h-16 rounded-lg bg-surface-container shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">electrical_services</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-xs group-hover:text-primary transition-colors">Ceiling Fan Installation</h4>
+<div class="flex flex-wrap gap-md items-center">
+<span class="flex items-center gap-1 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-[18px]">near_me</span>
+                                    0.8 miles away
+                                </span>
+<span class="flex items-center gap-1 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+                                    Posted 5h ago
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:items-end gap-sm w-full md:w-auto">
+<p class="font-headline-md text-headline-md text-on-surface">$85</p>
+<button class="bg-primary text-on-primary px-xl py-md rounded-lg font-label-md hover:bg-primary-container transition-colors w-full md:w-auto text-center">View Details</button>
+</div>
+</div>
+<!-- Job Card 3 -->
+<div class="bg-surface-container-lowest rounded-xl p-lg border border-outline-variant shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-lg group">
+<div class="flex gap-lg">
+<div class="w-16 h-16 rounded-lg bg-surface-container shrink-0 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-3xl">brush</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-xs group-hover:text-primary transition-colors">Accent Wall Painting</h4>
+<div class="flex flex-wrap gap-md items-center">
+<span class="flex items-center gap-1 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-[18px]">near_me</span>
+                                    4.2 miles away
+                                </span>
+<span class="flex items-center gap-1 text-on-surface-variant font-body-sm">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+                                    Posted 12h ago
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:items-end gap-sm w-full md:w-auto">
+<p class="font-headline-md text-headline-md text-on-surface">$220</p>
+<button class="bg-primary text-on-primary px-xl py-md rounded-lg font-label-md hover:bg-primary-container transition-colors w-full md:w-auto text-center">View Details</button>
+</div>
+</div>
+<!-- Load More -->
+<div class="pt-lg text-center">
+<button class="font-label-md text-primary border border-primary px-2xl py-md rounded-lg hover:bg-primary-fixed transition-colors">
+                        Load More Jobs
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant">
+<div class="w-full py-xl px-lg max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-xl">
+<div class="space-y-md">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed">HelperHub</span>
+<p class="font-body-sm text-on-surface-variant max-w-xs">Connecting professional home service providers with homeowners since 2024.</p>
+<p class="font-label-sm text-on-surface-variant">© 2024 HelperHub. Professional Home Services Marketplace.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-xl">
+<div class="flex flex-col gap-sm">
+<h5 class="font-label-md text-on-surface">Resources</h5>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Categories</a>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Help Center</a>
+</div>
+<div class="flex flex-col gap-sm">
+<h5 class="font-label-md text-on-surface">Company</h5>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Company Info</a>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Terms of Service</a>
+<a class="font-label-sm text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- Mobile Bottom Navigation (Strict Platform Rule) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant flex justify-around items-center h-16 z-50">
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">explore</span>
+<span class="font-label-sm text-[10px]">Explore</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">work</span>
+<span class="font-label-sm text-[10px]">Jobs</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span class="font-label-sm text-[10px]">Earnings</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-[10px]">Profile</span>
+</button>
+</nav>
+<script>
+        // Micro-interaction for job cards
+        document.querySelectorAll('.bg-surface-container-lowest').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.classList.add('scale-[1.01]');
+            });
+            card.addEventListener('mouseleave', () => {
+                card.classList.remove('scale-[1.01]');
+            });
+        });
+    </script>
+</body></html>

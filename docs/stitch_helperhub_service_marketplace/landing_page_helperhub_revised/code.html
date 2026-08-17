@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HelperHub | Professional Home Services Marketplace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at 70% 30%, rgba(0, 82, 204, 0.05) 0%, transparent 50%);
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-dim": "#d9dadc",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#0040a2",
+                "secondary-container": "#d6e3f7",
+                "error": "#ba1a1a",
+                "primary-fixed-dim": "#b2c5ff",
+                "primary-fixed": "#dae2ff",
+                "surface-container-lowest": "#ffffff",
+                "tertiary-container": "#006844",
+                "on-secondary": "#ffffff",
+                "on-surface-variant": "#434654",
+                "on-primary-container": "#c4d2ff",
+                "surface-variant": "#e1e2e4",
+                "on-surface": "#191c1e",
+                "tertiary-fixed-dim": "#65dca4",
+                "on-tertiary-container": "#72e9af",
+                "on-background": "#191c1e",
+                "surface-container-highest": "#e1e2e4",
+                "surface-bright": "#f8f9fb",
+                "primary-container": "#0052cc",
+                "surface-container-low": "#f3f4f6",
+                "surface-container-high": "#e7e8ea",
+                "on-tertiary": "#ffffff",
+                "background": "#f8f9fb",
+                "primary": "#003d9b",
+                "surface": "#f8f9fb",
+                "on-secondary-fixed": "#101c2b",
+                "error-container": "#ffdad6",
+                "on-tertiary-fixed": "#002113",
+                "on-error-container": "#93000a",
+                "tertiary": "#004e32",
+                "surface-tint": "#0c56d0",
+                "tertiary-fixed": "#82f9be",
+                "surface-container": "#edeef0",
+                "outline-variant": "#c3c6d6",
+                "on-error": "#ffffff",
+                "inverse-on-surface": "#f0f1f3",
+                "secondary-fixed": "#d6e3f7",
+                "on-secondary-fixed-variant": "#3b4858",
+                "secondary": "#535f70",
+                "secondary-fixed-dim": "#bbc7db",
+                "on-primary-fixed": "#001848",
+                "outline": "#737685",
+                "inverse-primary": "#b2c5ff",
+                "on-tertiary-fixed-variant": "#005235",
+                "inverse-surface": "#2e3132",
+                "on-secondary-container": "#596576"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "sm": "8px",
+                "container-max": "1280px",
+                "3xl": "64px",
+                "gutter": "24px",
+                "xs": "4px",
+                "xl": "32px",
+                "md": "16px",
+                "2xl": "48px",
+                "lg": "24px",
+                "base": "4px"
+            },
+            "fontFamily": {
+                "headline-xl": ["Inter"],
+                "headline-lg": ["Inter"],
+                "body-lg": ["Inter"],
+                "headline-sm": ["Inter"],
+                "label-sm": ["Inter"],
+                "label-md": ["Inter"],
+                "body-md": ["Inter"],
+                "headline-md": ["Inter"],
+                "body-sm": ["Inter"]
+            },
+            "fontSize": {
+                "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                "label-sm": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                "label-md": ["14px", {"lineHeight": "16px", "fontWeight": "600"}],
+                "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface dark:bg-surface-container-low shadow-sm transition-all duration-200 ease-in-out">
+<nav class="flex justify-between items-center w-full px-lg max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-xl">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">HelperHub</span>
+<div class="hidden md:flex gap-lg">
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Find a Helper</a>
+<a class="text-on-secondary-container dark:text-on-secondary-fixed-variant font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">Find Work</a>
+<a class="text-on-secondary-container dark:text-on-secondary-fixed-variant font-label-md hover:text-primary dark:hover:text-primary-fixed transition-colors" href="#">How it Works</a>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="font-label-md text-label-md px-md py-sm rounded-lg hover:bg-surface-container-high transition-colors">Log In</button>
+<button class="bg-primary text-on-primary font-label-md text-label-md px-lg py-sm rounded-lg shadow-sm hover:opacity-90 transition-opacity">Get Started</button>
+</div>
+</nav>
+</header>
+<main class="pt-16">
+<!-- Hero Section -->
+<section class="relative overflow-hidden hero-gradient py-2xl lg:py-3xl">
+<div class="max-w-container-max mx-auto px-lg grid grid-cols-1 lg:grid-cols-2 gap-2xl items-center">
+<div class="z-10">
+<h1 class="font-headline-xl text-headline-xl text-on-surface mb-md">Your Home, Handled.</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl max-w-lg">
+                        Connect with verified local helpers for everything from emergency repairs to home maintenance. Professional quality, guaranteed results.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-md">
+<button class="bg-primary text-on-primary px-2xl py-md rounded-xl font-label-md text-body-md flex items-center justify-center gap-sm transition-all hover:shadow-lg hover:scale-[1.02]">
+<span class="material-symbols-outlined">person_search</span>
+                            Hire a Helper
+                        </button>
+<button class="bg-secondary-container text-on-secondary-container px-2xl py-md rounded-xl font-label-md text-body-md flex items-center justify-center gap-sm transition-all hover:bg-outline-variant">
+<span class="material-symbols-outlined">work</span>
+                            Find Work
+                        </button>
+</div>
+<div class="mt-2xl flex items-center gap-lg">
+<div class="flex -space-x-4">
+<div class="w-12 h-12 rounded-full border-4 border-surface bg-cover bg-center" data-alt="A close-up portrait of a friendly professional electrician wearing a blue polo shirt, smiling at the camera in a modern kitchen setting. High-quality commercial photography with soft lighting and a warm, trustworthy atmosphere. Minimalist background with clean lines and soft blue tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAqsEgqAxsiS3QsmR4hhKZ7Nyek7ayMKhwV0YUrBiZUjf9V6Cgj2LHWCDrgYjnUpcUXiIIVaRi4ZtATmdafh1URlsFbt2862qDNOuHIOT-MEyl3HTRcThZr8HO6rv-gOfpn_Ydz9x6z7AKSLplu2U_jM5z1V-vqWhis1cZtctm6j02Dabk5VXF_phds4T4YuSlxGkFbMoaVwdO1G3qn5Yovkwm0zmB1zfkqRKcdpOS3pqDrUJNqO2ZjFw')"></div>
+<div class="w-12 h-12 rounded-full border-4 border-surface bg-cover bg-center" data-alt="A professional female carpenter in a workshop setting, holding a measuring tool, looking confident and skilled. Bright, natural lighting with a focused, industrial aesthetic. The color palette consists of neutral tones and professional blues, conveying expertise and precision." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBFO7sm8MLSvN3sWkSj5-B2mXH09mAEn0d0AHd6_B3IP-0-_VeIbIlnCUSxZlCSsh-r4xNJmbzGWPrNastZIclBJ1m9JqnPM47Lukgm7BvK9rpPYi_UcoWw2KyPg5THZZfvVLZFhIvDPWgKR4nWlUyd08MFVpx0W8VjYWLQG0U08zLDnPD6WhS7xAMWfomxUQtwKCkKPXONGGoryo1OxMi6SLG55ysgPbtuQODZIsGZme4v2r7FJFwK5g')"></div>
+<div class="w-12 h-12 rounded-full border-4 border-surface bg-cover bg-center" data-alt="A young male plumber in a professional uniform, standing in a brightly lit modern bathroom, carrying a toolbox and looking ready to work. High-end lifestyle photography, emphasizing reliability and cleanliness. The lighting is crisp and the background is a clean white and blue tiled interior." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCSZ86f7r5AO9jnn0gP8BVOi7nHyZaXejNkl8Fc50O2t055kJ4qkrHPOa4N0vR7hiFhZsosAMGJWPopyN57DsQoEKkQdmvUqv1hU-KlbcJjlrTnn7cYDTsnEs69k9_VWYg2BmEEREagjszVf7WBzytxgLHmvu2iunBL9BErmjGR4xG4HaEaq-4rlttP_bn_FrEDvDyws9eWmyK5Iiemk0TdrG--_RmjEqU6Mqho4XmYPk9th_prX5BYGg')"></div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            Joined by <span class="font-bold text-primary">2,500+</span> verified pros this month
+                        </p>
+</div>
+</div>
+<div class="relative lg:h-[600px]">
+<div class="absolute inset-0 bg-primary/5 rounded-3xl transform rotate-3 scale-105"></div>
+<div class="relative h-full rounded-3xl overflow-hidden shadow-2xl border border-outline-variant/30">
+<div class="w-full h-full bg-cover bg-center" data-alt="A professional service person in a clean navy blue uniform expertly installing a smart thermostat on a white wall inside a sun-drenched, minimalist modern home. The interior features light oak floors, designer furniture, and large windows. The lighting is bright and ethereal, highlighting the professional's focused expression and the high-end residential environment." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDY2fzZGlQZHyj6iq-ztLH4rpK6rRuGrOrLmYDMbiH3vZb_d0immyKSPyX3Q6ZnKu9HinCyH_BThkrZHtDNIFQQRYwTUtmtpH3xXhNg6913O4V7BsmQK46_1VguEcf19YZHSbd9b2Xeh_tLTapXuXWi4ipnQPo3HQgyVYLz_8owXMFOnWX6WRUdBatO5sC79_HavsYqCb_73OQROjaEkKaYccsXBD1pjkEQOsjsMJWKoDwGaZ2pDbj5fQ')"></div>
+<!-- Floating Trust Badge -->
+<div class="absolute bottom-lg left-lg glass-effect p-md rounded-xl shadow-xl flex items-center gap-md border border-white/50">
+<div class="w-10 h-10 bg-tertiary-container rounded-full flex items-center justify-center text-on-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Background Verified</p>
+<p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">100% Safety Guarantee</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Signals -->
+<section class="bg-surface-container-low py-xl">
+<div class="max-w-container-max mx-auto px-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-xl">
+<div class="flex items-start gap-md p-md bg-surface rounded-xl border border-outline-variant shadow-sm transition-transform hover:scale-[1.01]">
+<div class="p-sm bg-primary-container text-on-primary-container rounded-lg">
+<span class="material-symbols-outlined">shield_person</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Verified Professionals</h3>
+<p class="font-body-sm text-on-surface-variant">Multi-step identity and criminal background checks.</p>
+</div>
+</div>
+<div class="flex items-start gap-md p-md bg-surface rounded-xl border border-outline-variant shadow-sm transition-transform hover:scale-[1.01]">
+<div class="p-sm bg-primary-container text-on-primary-container rounded-lg">
+<span class="material-symbols-outlined">payments</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Fixed Pricing</h3>
+<p class="font-body-sm text-on-surface-variant">No hidden fees. Upfront quotes before every job.</p>
+</div>
+</div>
+<div class="flex items-start gap-md p-md bg-surface rounded-xl border border-outline-variant shadow-sm transition-transform hover:scale-[1.01]">
+<div class="p-sm bg-primary-container text-on-primary-container rounded-lg">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div>
+<h3 class="font-label-md text-on-surface">Service Guarantee</h3>
+<p class="font-body-sm text-on-surface-variant">Not happy? We'll make it right, guaranteed.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Browse by Category -->
+<section class="py-2xl lg:py-3xl">
+<div class="max-w-container-max mx-auto px-lg">
+<div class="flex justify-between items-end mb-2xl">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-xs">Browse by Category</h2>
+<p class="font-body-md text-on-surface-variant">Quality service for every corner of your home.</p>
+</div>
+<a class="font-label-md text-primary flex items-center gap-xs hover:underline decoration-2 underline-offset-4" href="#">
+                        View All Categories
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-lg">
+<!-- Plumber -->
+<div class="group relative overflow-hidden bg-surface rounded-2xl border border-outline-variant p-lg text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary">
+<div class="mb-md inline-flex p-md bg-secondary-container text-on-secondary-container rounded-2xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]">plumbing</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Plumber</h4>
+<p class="font-body-sm text-on-surface-variant mt-sm">Leaks, pipes &amp; drains</p>
+</div>
+<!-- Electrician -->
+<div class="group relative overflow-hidden bg-surface rounded-2xl border border-outline-variant p-lg text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary">
+<div class="mb-md inline-flex p-md bg-secondary-container text-on-secondary-container rounded-2xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]">electrical_services</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Electrician</h4>
+<p class="font-body-sm text-on-surface-variant mt-sm">Wiring, panels &amp; lights</p>
+</div>
+<!-- Carpenter -->
+<div class="group relative overflow-hidden bg-surface rounded-2xl border border-outline-variant p-lg text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary">
+<div class="mb-md inline-flex p-md bg-secondary-container text-on-secondary-container rounded-2xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]">carpenter</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Carpenter</h4>
+<p class="font-body-sm text-on-surface-variant mt-sm">Furniture &amp; structural</p>
+</div>
+<!-- Repair -->
+<div class="group relative overflow-hidden bg-surface rounded-2xl border border-outline-variant p-lg text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-primary">
+<div class="mb-md inline-flex p-md bg-secondary-container text-on-secondary-container rounded-2xl group-hover:bg-primary group-hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[32px]">build</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Repair</h4>
+<p class="font-body-sm text-on-surface-variant mt-sm">General home fixes</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Dynamic Bento Section -->
+<section class="py-2xl bg-surface-bright">
+<div class="max-w-container-max mx-auto px-lg">
+<div class="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-lg h-auto lg:h-[600px]">
+<!-- Large Feature -->
+<div class="md:col-span-2 md:row-span-2 relative rounded-3xl overflow-hidden group">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A panoramic view of a beautifully renovated modern living room featuring clean lines, a neutral color palette of whites and soft blues, and elegant designer furniture. The lighting is airy and cinematic, showcasing professional quality work. A sense of peace and home perfection is conveyed through high-key aesthetic choices." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVCacWLpbdutimtbjyB3Zel7B-Bv158PMIrtwVZwyZi9gy-KNsYUxfh8Fw-zLSNby2kTJPN6CF9AtnurTJF-M-wpa6qar4OVPQ6sTb28svw6Xz9Nuc9-Vb0elRFoeLNnOnWGMqUU1AfFqlywXVVrHgKpZ0vApGK850aGybRlH57lGumCO577jkDqMmD7DzAcWoSK0flBpwM5WXKytcG7mn90vtikQHl30IHLXFpoo1M52DMO0PLa6ovg')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity"></div>
+<div class="absolute bottom-0 left-0 p-2xl text-on-primary">
+<h3 class="font-headline-lg text-headline-lg mb-sm">Professional Excellence</h3>
+<p class="font-body-lg text-body-lg opacity-90 max-w-md">Our helpers are trained to treat your home like their own. Every detail matters.</p>
+<button class="mt-lg px-xl py-md bg-primary text-on-primary rounded-xl font-label-md hover:scale-105 transition-transform">Schedule a Consultation</button>
+</div>
+</div>
+<!-- Stats Card -->
+<div class="bg-primary p-xl rounded-3xl flex flex-col justify-center text-on-primary shadow-xl">
+<span class="font-headline-xl text-headline-xl">98%</span>
+<p class="font-label-md text-label-md uppercase tracking-widest opacity-80 mt-xs">Satisfaction Rate</p>
+<p class="font-body-sm text-body-sm mt-md">Based on over 50,000+ completed services across the country.</p>
+</div>
+<!-- Testimonial Card -->
+<div class="bg-surface p-xl rounded-3xl border border-outline-variant flex flex-col justify-between shadow-sm">
+<div class="flex gap-xs text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+<p class="font-body-md italic text-on-surface-variant">"The most professional service I've ever used. The plumber arrived on time and fixed the issue in 20 minutes."</p>
+<div class="flex items-center gap-sm mt-md">
+<div class="w-8 h-8 rounded-full bg-surface-container-high"></div>
+<span class="font-label-md text-on-surface">Sarah J., Homeowner</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant">
+<div class="w-full py-xl px-lg max-w-container-max mx-auto flex flex-col md:flex-row justify-between gap-2xl">
+<div class="max-w-sm">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed block mb-md">HelperHub</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-lg">Connecting quality professionals with homeowners who value excellence. Your home is in safe hands.</p>
+<div class="flex gap-md">
+<a class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">public</span>
+</a>
+<a class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-all" href="#">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+</a>
+</div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-xl">
+<div class="flex flex-col gap-sm">
+<p class="font-label-md text-on-surface mb-xs uppercase tracking-wider opacity-60">Services</p>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Categories</a>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Pricing</a>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Safety</a>
+</div>
+<div class="flex flex-col gap-sm">
+<p class="font-label-md text-on-surface mb-xs uppercase tracking-wider opacity-60">Company</p>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Company Info</a>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Help Center</a>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-sm">
+<p class="font-label-md text-on-surface mb-xs uppercase tracking-wider opacity-60">Legal</p>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-on-secondary-fixed-variant font-label-sm hover:text-primary transition-colors" href="#">Accessibility</a>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-lg py-md border-t border-outline-variant/30 text-center md:text-left">
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">© 2024 HelperHub. Professional Home Services Marketplace. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Micro-interaction for scroll effects
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('shadow-md', 'h-14');
+                header.classList.remove('h-16');
+            } else {
+                header.classList.remove('shadow-md', 'h-14');
+                header.classList.add('h-16');
+            }
+        });
+
+        // Simple animation on category cards
+        const cards = document.querySelectorAll('.group');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                const icon = card.querySelector('.material-symbols-outlined');
+                if(icon) icon.style.transform = 'scale(1.1) rotate(5deg)';
+            });
+            card.addEventListener('mouseleave', () => {
+                const icon = card.querySelector('.material-symbols-outlined');
+                if(icon) icon.style.transform = 'scale(1) rotate(0deg)';
+            });
+        });
+    </script>
+</body></html>
