@@ -1,58 +1,78 @@
 const https = require('https');
 const { SYSTEM_PROMPT, buildUserPrompt } = require('../prompts/costEstimation');
 
-const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages';
-const ANTHROPIC_MODEL = 'claude-sonnet-4-5'; // claude-sonnet-4-6 maps to this API slug
-
-const VALID_SERVICE_TYPES = ['Plumber', 'Electrician', 'Carpenter', 'Painter', 'AC Technician', 'Cleaner', 'Mechanic', 'Gardener', 'General Repair'];
+// OpenRouter provides an OpenAI-compatible endpoint that routes to Claude and other models.
+// Docs: https://openrouter.ai/docs
+const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
+const OPENROUTER_MODEL = 'anthropic/claude-sonnet-4-5'; // verified slug at openrouter.ai/models
 
 /**
- * Call the Anthropic Messages API.
- * Returns the raw response text from the first content block.
+ * Call the OpenRouter Chat Completions API (OpenAI-compatible format).
+ *
+ * OpenRouter request shape:
+ *   POST https://openrouter.ai/api/v1/chat/completions
+ *   Authorization: Bearer <OPENROUTER_API_KEY>
+ *   HTTP-Referer: <app URL>          (recommended by OpenRouter for attribution)
+ *   X-Title: <app name>              (recommended by OpenRouter for attribution)
+ *   Body: { model, messages: [{role, content}] }
+ *
+ * OpenRouter response shape (OpenAI-style):
+ *   { choices: [{ message: { role, content }, finish_reason }] }
+ *   — unlike Anthropic's native API which returns { content: [{ type, text }] }
+ *
+ * @returns {Promise<string>} raw text content from the LLM response
  */
-function callAnthropicAPI(systemPrompt, userMessage) {
+function callOpenRouterAPI(systemPrompt, userMessage) {
   return new Promise((resolve, reject) => {
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey || apiKey === 'your_anthropic_api_key') {
-      return reject(new Error('ANTHROPIC_API_KEY is not configured'));
+    const apiKey = process.env.OPENROUTER_API_KEY;
+    if (!apiKey || apiKey === 'your_openrouter_api_key') {
+      return reject(new Error('OPENROUTER_API_KEY is not configured. Get a free key at openrouter.ai/keys'));
     }
 
+    // OpenAI-compatible message format: system and user as separate message objects
     const body = JSON.stringify({
-      model: ANTHROPIC_MODEL,
+      model: OPENROUTER_MODEL,
       max_tokens: 512,
-      system: systemPrompt,
-      messages: [{ role: 'user', content: userMessage }],
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user',   content: userMessage  },
+      ],
     });
 
     const options = {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
+        'Content-Type':  'application/json',
+        'Authorization': `Bearer ${apiKey}`,          // OpenAI-style Bearer token auth
+        'HTTP-Referer':  process.env.CLIENT_URL || 'http://localhost:5173', // OpenRouter attribution
+        'X-Title':       'HelperHub',                 // OpenRouter attribution
         'Content-Length': Buffer.byteLength(body),
       },
     };
 
-    const req = https.request(ANTHROPIC_API_URL, options, (res) => {
+    const req = https.request(OPENROUTER_API_URL, options, (res) => {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
         try {
           const parsed = JSON.parse(data);
+
+          // OpenRouter surfaces API-level errors in parsed.error
           if (parsed.error) {
-            return reject(new Error(`Anthropic API error: ${parsed.error.message}`));
+            return reject(new Error(`OpenRouter error (${parsed.error.code}): ${parsed.error.message}`));
           }
-          const text = parsed.content?.[0]?.text;
-          if (!text) return reject(new Error('Empty response from Anthropic'));
-          resolve(text);
+
+          // OpenAI-compatible response: choices[0].message.content
+          const text = parsed.choices?.[0]?.message?.content;
+          if (!text) return reject(new Error('Empty or unexpected response from OpenRouter'));
+          resolve(text.trim());
         } catch (e) {
-          reject(new Error('Failed to parse Anthropic response: ' + e.message));
+          reject(new Error('Failed to parse OpenRouter response: ' + e.message));
         }
       });
     });
 
-    req.on('error', (e) => reject(new Error('Network error calling Anthropic: ' + e.message)));
+    req.on('error', (e) => reject(new Error('Network error calling OpenRouter: ' + e.message)));
     req.write(body);
     req.end();
   });
@@ -61,6 +81,9 @@ function callAnthropicAPI(systemPrompt, userMessage) {
 /**
  * Parse and strictly validate the structured JSON output from the LLM.
  * Returns the validated object or throws a descriptive error.
+ *
+ * This validation is provider-agnostic — it enforces the contract regardless
+ * of whether we're using OpenRouter, Anthropic directly, or any other LLM.
  */
 function parseAndValidateEstimate(rawText) {
   // Strip any accidental markdown fences the model may have added
@@ -113,14 +136,15 @@ const getCostEstimate = async (req, res) => {
 
   try {
     const userPrompt = buildUserPrompt(serviceType.trim(), jobDescription.trim(), city.trim());
-    const rawText = await callAnthropicAPI(SYSTEM_PROMPT, userPrompt);
+    const rawText = await callOpenRouterAPI(SYSTEM_PROMPT, userPrompt);
     const estimate = parseAndValidateEstimate(rawText);
 
     res.json({
       success: true,
       estimate,
       meta: {
-        model: ANTHROPIC_MODEL,
+        provider: 'openrouter',
+        model: OPENROUTER_MODEL,
         serviceType,
         city,
         generatedAt: new Date().toISOString(),
