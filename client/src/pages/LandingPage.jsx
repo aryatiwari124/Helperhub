@@ -190,44 +190,6 @@ export default function LandingPage() {
               ))}
             </div>
           </div>
-
-          {/* Hero Visual Card Stack */}
-          <div className="hero-visual">
-            <div className="hero-card-float hero-card-1">
-              <div className="flex items-center gap-3">
-                <div className="avatar-placeholder avatar-md avatar-ring">RK</div>
-                <div>
-                  <p style={{ fontWeight: 800, fontSize: 15, color: 'var(--color-on-surface)' }}>Rajesh Kumar</p>
-                  <p className="text-xs text-primary font-bold">🔧 {t('landing_card_master')}</p>
-                  <div className="flex items-center gap-1 mt-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={12} fill="#FF6B4A" stroke="#FF6B4A" />
-                    ))}
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-primary)' }}>4.9 (127 {t('landing_card_reviews')})</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="hero-card-float hero-card-2">
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 38, height: 38, background: 'var(--color-secondary-light)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>🎉</div>
-                <div>
-                  <p style={{ fontWeight: 800, fontSize: 14, color: 'var(--color-on-surface)' }}>{t('landing_card_all_set')}</p>
-                  <p style={{ fontSize: 12.5, color: '#1B857A', fontWeight: 700 }}>{t('landing_card_done')}</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="hero-grid-bg">
-              {CATEGORIES.map((cat, i) => (
-                <div key={cat.name} className="hero-category-orb" onClick={() => handleCategoryClick(cat.name)} style={{ background: cat.color, border: `2px solid ${cat.border}`, animationDelay: `${i * 0.12}s` }}>
-                  <span style={{ fontSize: 32 }}>{cat.icon}</span>
-                  <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-on-surface)' }}>{t(cat.key, cat.name)}</span>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </section>
 
@@ -490,8 +452,8 @@ export default function LandingPage() {
           <div className="app-download-banner card">
             <div className="app-download-content">
               <span className="badge badge-warning mb-3">{t('app_badge')}</span>
-              <h2 className="headline-lg" style={{ color: 'white', marginBottom: 12 }}>{t('app_title')}</h2>
-              <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: '17px', marginBottom: 24, maxWidth: 500 }}>
+              <h2 className="headline-lg app-download-title">{t('app_title')}</h2>
+              <p className="app-download-desc">
                 {t('app_sub')}
               </p>
 
@@ -513,7 +475,7 @@ export default function LandingPage() {
                 <div className="mockup-header">{t('app_mockup_title')}</div>
                 <div className="mockup-body flex flex-col gap-2 items-center justify-center text-center">
                   <div style={{ fontSize: 42 }}>📱⚡</div>
-                  <p style={{ fontSize: 13, fontWeight: 800, color: '#FF6B4A' }}>{t('app_mockup_desc')}</p>
+                  <p style={{ fontSize: 13, fontWeight: 800, color: 'var(--color-primary)' }}>{t('app_mockup_desc')}</p>
                 </div>
               </div>
             </div>
