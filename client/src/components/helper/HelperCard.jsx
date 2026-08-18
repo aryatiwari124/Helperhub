@@ -8,6 +8,17 @@ const CATEGORY_EMOJIS = {
   Mechanic: '🔩', Gardener: '🌿',
 };
 
+const CATEGORY_KEYS = {
+  Plumber: 'cat_plumber',
+  Electrician: 'cat_electrician',
+  Carpenter: 'cat_carpenter',
+  'AC Technician': 'cat_ac',
+  Painter: 'cat_painter',
+  Cleaner: 'cat_cleaner',
+  Mechanic: 'cat_mechanic',
+  Gardener: 'cat_gardener',
+};
+
 function StarRating({ rating, size = 16 }) {
   return (
     <div className="stars">
@@ -31,7 +42,7 @@ export default function HelperCard({ profile, index = 0, onHire }) {
   const mainCategory = profile.category?.[0] || 'Fix-It Pro';
 
   // Computed / Fallback location & arrival metrics for realistic marketplace cards
-  const computedDistance = profile.distance || `${((index * 0.7 + 1.2) % 4.5 + 0.8).toFixed(1)} km away`;
+  const computedDistance = profile.distance || `${((index * 0.7 + 1.2) % 4.5 + 0.8).toFixed(1)} km ${t('browse_filter_distance', 'away')}`;
   const computedETA = profile.estimatedETA || `${15 + ((index * 7) % 25)} mins`;
 
   return (
@@ -58,7 +69,7 @@ export default function HelperCard({ profile, index = 0, onHire }) {
                 {initials}
               </div>
             )}
-            <div className="pro-online-dot" title="Available Now" />
+            <div className="pro-online-dot" title={t('helper_available_now', 'Available Now')} />
           </div>
 
           {/* Name, Profession, Rating */}
@@ -68,7 +79,7 @@ export default function HelperCard({ profile, index = 0, onHire }) {
             </div>
             
             <p className="pro-profession text-primary font-bold">
-              {CATEGORY_EMOJIS[mainCategory] || '🛠️'} {mainCategory}
+              {CATEGORY_EMOJIS[mainCategory] || '🛠️'} {t(CATEGORY_KEYS[mainCategory] || '', mainCategory)}
             </p>
 
             <div className="flex items-center gap-2 mt-1">
@@ -106,7 +117,7 @@ export default function HelperCard({ profile, index = 0, onHire }) {
       <div className="pro-card-footer">
         <div className="pro-price-box">
           <span className="pro-price-amount">₹{profile.rate || 450}</span>
-          <span className="pro-price-unit">/{profile.rateType || 'hr'}</span>
+          <span className="pro-price-unit">/{t('general_hrs', 'hr')}</span>
         </div>
 
         <div className="flex gap-2 items-center">

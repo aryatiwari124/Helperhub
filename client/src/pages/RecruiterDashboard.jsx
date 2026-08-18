@@ -5,10 +5,23 @@ import api from '../services/api';
 import HelperCard from '../components/helper/HelperCard';
 import HireModal from '../components/helper/HireModal';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 import toast from 'react-hot-toast';
+
+const CATEGORIES = [
+  { name: 'Plumber', key: 'cat_plumber' },
+  { name: 'Electrician', key: 'cat_electrician' },
+  { name: 'Carpenter', key: 'cat_carpenter' },
+  { name: 'AC Technician', key: 'cat_ac' },
+  { name: 'Painter', key: 'cat_painter' },
+  { name: 'Cleaner', key: 'cat_cleaner' },
+  { name: 'Mechanic', key: 'cat_mechanic' },
+  { name: 'Gardener', key: 'cat_gardener' },
+];
 
 export default function RecruiterDashboard() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('browse'); // 'browse' | 'my-jobs' | 'bookings'
   const [helpers, setHelpers] = useState([]);
   const [myJobs, setMyJobs] = useState([]);
@@ -27,7 +40,16 @@ export default function RecruiterDashboard() {
   const [jobForm, setJobForm] = useState({ title: '', category: 'Plumber', description: '', location: '', budget: '', preferredDate: '' });
   const [posting, setPosting] = useState(false);
 
-  const categories = ['Plumber', 'Electrician', 'Carpenter', 'AC Technician', 'Painter', 'Cleaner', 'Mechanic', 'Gardener'];
+  const getCategoryName = (catName) => {
+    const match = CATEGORIES.find(c => c.name.toLowerCase() === catName?.toLowerCase());
+    return match ? t(match.key, match.name) : catName;
+  };
+
+  const getStatusLabel = (status) => {
+    if (!status) return '';
+    const key = `status_${status.toLowerCase().replace(/\s+/g, '_')}`;
+    return t(key, status);
+  };
 
   const loadData = async () => {
     setLoading(true);
@@ -54,7 +76,7 @@ export default function RecruiterDashboard() {
   const handlePostJob = async (e) => {
     e.preventDefault();
     if (!jobForm.title || !jobForm.description || !jobForm.location) {
-      toast.error('Please fill required fields');
+      toast.error(t('job_post_err_required'));
       return;
     }
     setPosting(true);
@@ -63,12 +85,12 @@ export default function RecruiterDashboard() {
         ...jobForm,
         budget: Number(jobForm.budget) || undefined,
       });
-      toast.success('Job requirement posted!');
+      toast.success(t('job_post_success'));
       setShowPostJob(false);
       setJobForm({ title: '', category: 'Plumber', description: '', location: '', budget: '', preferredDate: '' });
       loadData();
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Failed to post job');
+      toast.error(err.response?.data?.message || t('job_post_failed'));
     } finally {
       setPosting(false);
     }
@@ -79,24 +101,26 @@ export default function RecruiterDashboard() {
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 'var(--space-8)', flexWrap: 'wrap', gap: 'var(--space-4)' }}>
         <div>
-          <h1 className="headline-lg">Recruiter Dashboard</h1>
-          <p className="text-secondary" style={{ marginTop: 4 }}>Welcome back, {user?.name}! Manage your hires and job posts.</p>
+          <h1 className="headline-lg">{t('recruiter_dashboard_title')}</h1>
+          <p className="text-secondary" style={{ marginTop: 4 }}>
+            {t('recruiter_welcome', { name: user?.name || '' })}
+          </p>
         </div>
         <button className="btn btn-primary" onClick={() => setShowPostJob(true)}>
-          <Plus size={18} /> Post a Requirement
+          <Plus size={18} /> {t('recruiter_post_req_btn')}
         </button>
       </div>
 
       {/* Navigation Tabs */}
       <div className="tabs" style={{ marginBottom: 'var(--space-8)' }}>
         <button className={`tab ${activeTab === 'browse' ? 'active' : ''}`} onClick={() => setActiveTab('browse')}>
-          Browse Helpers ({helpers.length})
+          {t('recruiter_tab_browse', { count: helpers.length })}
         </button>
         <button className={`tab ${activeTab === 'my-jobs' ? 'active' : ''}`} onClick={() => setActiveTab('my-jobs')}>
-          My Job Posts ({myJobs.length})
+          {t('recruiter_tab_my_jobs', { count: myJobs.length })}
         </button>
         <button className={`tab ${activeTab === 'bookings' ? 'active' : ''}`} onClick={() => setActiveTab('bookings')}>
-          My Bookings ({bookings.length})
+          {t('recruiter_tab_bookings', { count: bookings.length })}
         </button>
       </div>
 
@@ -107,21 +131,21 @@ export default function RecruiterDashboard() {
           <div className="card" style={{ padding: 'var(--space-4)', marginBottom: 'var(--space-6)', display: 'flex', gap: 'var(--space-4)', flexWrap: 'wrap' }}>
             <div style={{ flex: 1, minWidth: 200 }}>
               <select className="form-select" value={searchCategory} onChange={e => setSearchCategory(e.target.value)}>
-                <option value="">All Categories</option>
-                {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                <option value="">{t('recruiter_all_categories')}</option>
+                {CATEGORIES.map(c => <option key={c.name} value={c.name}>{t(c.key, c.name)}</option>)}
               </select>
             </div>
             <div style={{ flex: 1, minWidth: 200 }}>
               <input
                 className="form-input"
-                placeholder="Search by city (e.g. Mumbai)"
+                placeholder={t('recruiter_search_city_placeholder')}
                 value={searchCity}
                 onChange={e => setSearchCity(e.target.value)}
               />
             </div>
             {(searchCategory || searchCity) && (
               <button className="btn btn-ghost" onClick={() => { setSearchCategory(''); setSearchCity(''); }}>
-                Clear Filters
+                {t('recruiter_clear_filters')}
               </button>
             )}
           </div>
@@ -134,15 +158,15 @@ export default function RecruiterDashboard() {
             </div>
           ) : helpers.length > 0 ? (
             <div className="helpers-grid">
-              {helpers.map(p => (
-                <HelperCard key={p._id} profile={p} onHire={hp => setSelectedHelper(hp)} />
+              {helpers.map((p, index) => (
+                <HelperCard key={p._id} profile={p} index={index} onHire={hp => setSelectedHelper(hp)} />
               ))}
             </div>
           ) : (
             <div className="empty-state">
               <div className="empty-state-icon">🔍</div>
-              <p className="empty-state-title">No helpers found</p>
-              <p className="empty-state-text">Try adjusting your category or city filters.</p>
+              <p className="empty-state-title">{t('recruiter_no_helpers_title')}</p>
+              <p className="empty-state-text">{t('recruiter_no_helpers_desc')}</p>
             </div>
           )}
         </div>
@@ -156,8 +180,8 @@ export default function RecruiterDashboard() {
               {myJobs.map(job => (
                 <div key={job._id} className="card card-body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <span className="badge badge-primary">{job.category}</span>
-                    <span className={`badge status-${job.status}`}>{job.status}</span>
+                    <span className="badge badge-primary">{getCategoryName(job.category)}</span>
+                    <span className={`badge status-${job.status}`}>{getStatusLabel(job.status)}</span>
                   </div>
                   <h3 style={{ fontSize: '18px', fontWeight: 700 }}>{job.title}</h3>
                   <p className="body-sm text-secondary" style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
@@ -173,8 +197,10 @@ export default function RecruiterDashboard() {
           ) : (
             <div className="empty-state">
               <div className="empty-state-icon">📋</div>
-              <p className="empty-state-title">No job posts created yet</p>
-              <button className="btn btn-primary mt-4" onClick={() => setShowPostJob(true)}>Post a Requirement</button>
+              <p className="empty-state-title">{t('recruiter_no_jobs_title')}</p>
+              <button className="btn btn-primary mt-4" onClick={() => setShowPostJob(true)}>
+                <Plus size={16} /> {t('recruiter_post_req_btn')}
+              </button>
             </div>
           )}
         </div>
@@ -190,16 +216,18 @@ export default function RecruiterDashboard() {
                   <div style={{ display: 'flex', gap: 'var(--space-4)', alignItems: 'center' }}>
                     <div className="avatar-placeholder avatar-lg">{req.helperId?.name?.[0]}</div>
                     <div>
-                      <h3 style={{ fontSize: '17px', fontWeight: 700 }}>{req.jobTitle || 'Direct Booking'}</h3>
-                      <p className="text-sm text-secondary">Helper: <strong>{req.helperId?.name}</strong> ({req.helperId?.email})</p>
+                      <h3 style={{ fontSize: '17px', fontWeight: 700 }}>{req.jobTitle || t('recruiter_direct_booking')}</h3>
+                      <p className="text-sm text-secondary">{t('recruiter_helper_label')} <strong>{req.helperId?.name}</strong> ({req.helperId?.email})</p>
                       <p className="text-xs text-muted" style={{ marginTop: 4 }}>📍 {req.jobLocation} · ₹{req.agreedAmount}</p>
                     </div>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
                     <span className={`badge status-${req.status}`} style={{ fontSize: '13px', padding: '6px 14px' }}>
-                      {req.status}
+                      {getStatusLabel(req.status)}
                     </span>
-                    <Link to={`/job/${req._id}`} className="btn btn-outline btn-sm">View Details & Status</Link>
+                    <Link to={`/job/${req._id}`} className="btn btn-outline btn-sm">
+                      {t('recruiter_view_details')}
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -207,8 +235,8 @@ export default function RecruiterDashboard() {
           ) : (
             <div className="empty-state">
               <div className="empty-state-icon">🤝</div>
-              <p className="empty-state-title">No active or past bookings</p>
-              <p className="empty-state-text">Browse helpers to initiate a hire request!</p>
+              <p className="empty-state-title">{t('recruiter_no_bookings_title')}</p>
+              <p className="empty-state-text">{t('recruiter_no_bookings_desc')}</p>
             </div>
           )}
         </div>
@@ -229,51 +257,53 @@ export default function RecruiterDashboard() {
         <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowPostJob(false)}>
           <div className="modal">
             <div className="modal-header">
-              <h2 style={{ fontSize: '18px', fontWeight: 700 }}>Post a Job Requirement</h2>
+              <h2 style={{ fontSize: '18px', fontWeight: 700 }}>{t('job_post_modal_title')}</h2>
               <button className="btn btn-ghost btn-icon" onClick={() => setShowPostJob(false)}>✕</button>
             </div>
             <form onSubmit={handlePostJob}>
               <div className="modal-body" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
                 <div className="form-group">
-                  <label className="form-label">Title *</label>
+                  <label className="form-label">{t('job_post_title_label')}</label>
                   <input
                     className="form-input"
-                    placeholder="e.g. Require Electrician for MCB Tripping Issue"
+                    placeholder={t('job_post_title_placeholder')}
                     value={jobForm.title}
                     onChange={e => setJobForm({ ...jobForm, title: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Category *</label>
+                  <label className="form-label">{t('job_post_category_label')}</label>
                   <select className="form-select" value={jobForm.category} onChange={e => setJobForm({ ...jobForm, category: e.target.value })}>
-                    {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                    {CATEGORIES.map(c => <option key={c.name} value={c.name}>{t(c.key, c.name)}</option>)}
                   </select>
                 </div>
                 <div className="form-group">
-                  <label className="form-label">Description *</label>
+                  <label className="form-label">{t('job_post_desc_label')}</label>
                   <textarea
                     className="form-textarea"
                     rows={3}
-                    placeholder="Explain the work required..."
+                    placeholder={t('job_post_desc_placeholder')}
                     value={jobForm.description}
                     onChange={e => setJobForm({ ...jobForm, description: e.target.value })}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
                   <div className="form-group">
-                    <label className="form-label">Location *</label>
-                    <input className="form-input" placeholder="City / Area" value={jobForm.location} onChange={e => setJobForm({ ...jobForm, location: e.target.value })} />
+                    <label className="form-label">{t('job_post_location_label')}</label>
+                    <input className="form-input" placeholder={t('job_post_location_placeholder')} value={jobForm.location} onChange={e => setJobForm({ ...jobForm, location: e.target.value })} />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Budget (₹)</label>
-                    <input className="form-input" type="number" placeholder="Estimated budget" value={jobForm.budget} onChange={e => setJobForm({ ...jobForm, budget: e.target.value })} />
+                    <label className="form-label">{t('job_post_budget_label')}</label>
+                    <input className="form-input" type="number" placeholder={t('job_post_budget_placeholder')} value={jobForm.budget} onChange={e => setJobForm({ ...jobForm, budget: e.target.value })} />
                   </div>
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-ghost" onClick={() => setShowPostJob(false)}>Cancel</button>
+                <button type="button" className="btn btn-ghost" onClick={() => setShowPostJob(false)}>
+                  {t('general_cancel')}
+                </button>
                 <button type="submit" className="btn btn-primary" disabled={posting}>
-                  {posting ? 'Posting...' : 'Publish Job Post'}
+                  {posting ? t('job_post_submitting') : t('job_post_submit')}
                 </button>
               </div>
             </form>

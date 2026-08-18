@@ -1,9 +1,22 @@
 import { useState } from 'react';
 import { X, Calendar, MapPin, DollarSign, FileText, AlertCircle } from 'lucide-react';
 import api from '../../services/api';
+import { useLanguage } from '../../context/LanguageContext';
 import toast from 'react-hot-toast';
 
+const CATEGORY_KEYS = {
+  Plumber: 'cat_plumber',
+  Electrician: 'cat_electrician',
+  Carpenter: 'cat_carpenter',
+  'AC Technician': 'cat_ac',
+  Painter: 'cat_painter',
+  Cleaner: 'cat_cleaner',
+  Mechanic: 'cat_mechanic',
+  Gardener: 'cat_gardener',
+};
+
 export default function HireModal({ helper, profile, onClose, onSuccess }) {
+  const { t } = useLanguage();
   const [form, setForm] = useState({
     jobTitle: '',
     jobDescription: '',
@@ -19,7 +32,7 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
   const submit = async (e) => {
     e.preventDefault();
     if (!form.jobTitle || !form.jobDescription || !form.jobLocation) {
-      setError('Please fill all required fields');
+      setError(t('hire_err_required'));
       return;
     }
     setLoading(true);
@@ -30,17 +43,19 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
         ...form,
         agreedAmount: Number(form.agreedAmount),
       });
-      toast.success(`Hire request sent to ${helper.name}!`);
+      toast.success(t('hire_success', { name: helper.name }));
       onSuccess?.();
       onClose();
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send request');
+      setError(err.response?.data?.message || t('hire_failed'));
     } finally {
       setLoading(false);
     }
   };
 
   const initials = helper?.name?.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+
+  const categoriesText = profile?.category?.map(c => t(CATEGORY_KEYS[c] || '', c)).join(', ');
 
   return (
     <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
@@ -53,8 +68,10 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
               <div className="avatar-placeholder avatar-md" style={{ fontSize: '16px' }}>{initials}</div>
             )}
             <div>
-              <h2 style={{ fontSize: '18px', fontWeight: 700 }}>Hire {helper?.name}</h2>
-              <p className="text-sm text-secondary">{profile?.category?.join(', ')}</p>
+              <h2 style={{ fontSize: '18px', fontWeight: 700 }}>
+                {t('hire_modal_title', { name: helper?.name || '' })}
+              </h2>
+              <p className="text-sm text-secondary">{categoriesText}</p>
             </div>
           </div>
           <button className="btn btn-ghost btn-icon" onClick={onClose}><X size={18} /></button>
@@ -69,31 +86,31 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
             )}
 
             <div className="form-group">
-              <label className="form-label">Job Title *</label>
+              <label className="form-label">{t('hire_job_title')}</label>
               <input
                 className="form-input"
                 name="jobTitle"
                 value={form.jobTitle}
                 onChange={handle}
-                placeholder="e.g. Fix bathroom pipe leak"
+                placeholder={t('hire_job_title_placeholder')}
               />
             </div>
 
             <div className="form-group">
-              <label className="form-label">Job Description *</label>
+              <label className="form-label">{t('hire_job_desc')}</label>
               <textarea
                 className="form-textarea"
                 name="jobDescription"
                 value={form.jobDescription}
                 onChange={handle}
-                placeholder="Describe the work needed in detail..."
+                placeholder={t('hire_job_desc_placeholder')}
                 rows={3}
               />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>
               <div className="form-group">
-                <label className="form-label">Location *</label>
+                <label className="form-label">{t('hire_location')}</label>
                 <div style={{ position: 'relative' }}>
                   <MapPin size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
                   <input
@@ -101,13 +118,13 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
                     name="jobLocation"
                     value={form.jobLocation}
                     onChange={handle}
-                    placeholder="Your area, city"
+                    placeholder={t('hire_location_placeholder')}
                     style={{ paddingLeft: 36 }}
                   />
                 </div>
               </div>
               <div className="form-group">
-                <label className="form-label">Preferred Date</label>
+                <label className="form-label">{t('hire_date')}</label>
                 <div style={{ position: 'relative' }}>
                   <Calendar size={15} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--color-outline)' }} />
                   <input
@@ -124,7 +141,7 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Agreed Amount (₹)</label>
+              <label className="form-label">{t('hire_amount')}</label>
               <div style={{ position: 'relative' }}>
                 <span style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', fontWeight: 600, color: 'var(--color-on-surface-variant)' }}>₹</span>
                 <input
@@ -133,18 +150,18 @@ export default function HireModal({ helper, profile, onClose, onSuccess }) {
                   name="agreedAmount"
                   value={form.agreedAmount}
                   onChange={handle}
-                  placeholder={`Suggested: ₹${profile?.rate}/${profile?.rateType || 'hr'}`}
+                  placeholder={t('hire_amount_placeholder', { rate: profile?.rate || 450, rateType: t('general_hrs', 'hr') })}
                   style={{ paddingLeft: 28 }}
                 />
               </div>
-              <span className="form-hint">Helper's standard rate: ₹{profile?.rate}/{profile?.rateType || 'hr'}</span>
+              <span className="form-hint">{t('hire_standard_rate', { rate: profile?.rate || 450, rateType: t('general_hrs', 'hr') })}</span>
             </div>
           </div>
 
           <div className="modal-footer">
-            <button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button>
+            <button type="button" className="btn btn-ghost" onClick={onClose}>{t('general_cancel')}</button>
             <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? <><div className="spinner spinner-sm" />Sending...</> : 'Send Hire Request'}
+              {loading ? <><div className="spinner spinner-sm" />{t('hire_sending')}</> : t('hire_submit')}
             </button>
           </div>
         </form>
