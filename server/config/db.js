@@ -2,16 +2,24 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/helperhub';
+  const isProduction = process.env.NODE_ENV === 'production';
+
   try {
     const conn = await mongoose.connect(uri, {
-      serverSelectionTimeoutMS: 3000,
+      serverSelectionTimeoutMS: isProduction ? 15000 : 5000,
     });
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {
-    console.warn(`⚠️ Local MongoDB (${uri}) not reachable: ${error.message}`);
+    console.error(`❌ MongoDB connection failed (${uri}): ${error.message}`);
+
+    // In production, do not attempt to start in-memory database
+    if (isProduction) {
+      console.error('⚠️ Please verify your MongoDB Atlas IP Access List (0.0.0.0/0) and credentials.');
+      throw error;
+    }
+
     console.log('🔄 Launching In-Memory MongoDB instance for development & testing...');
-    
     try {
       const { MongoMemoryServer } = require('mongodb-memory-server');
       const mongod = await MongoMemoryServer.create();
