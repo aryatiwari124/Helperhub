@@ -43,11 +43,11 @@ const autoSeed = async () => {
   await Category.deleteMany({});
   await Category.insertMany(categories);
 
-  const hashedPass = await bcrypt.hash('admin123', 12);
+  const defaultPass = 'admin123';
   await User.create({
     name: 'Admin User',
     email: 'admin@helperhub.com',
-    password: hashedPass,
+    password: defaultPass,
     role: 'admin',
     authProvider: 'local',
     isVerified: true,
@@ -57,7 +57,7 @@ const autoSeed = async () => {
     const user = await User.create({
       name: h.name,
       email: h.email,
-      password: hashedPass,
+      password: defaultPass,
       role: 'jobseeker',
       authProvider: 'local',
       isVerified: true,
@@ -85,7 +85,7 @@ const autoSeed = async () => {
     const user = await User.create({
       name: r.name,
       email: r.email,
-      password: hashedPass,
+      password: defaultPass,
       role: 'recruiter',
       authProvider: 'local',
       isVerified: true,

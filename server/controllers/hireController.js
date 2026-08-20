@@ -8,6 +8,10 @@ const sendHireRequest = async (req, res) => {
   try {
     const { helperId, jobPostId, jobTitle, jobDescription, jobLocation, scheduledDate, agreedAmount } = req.body;
 
+    if (req.user.id === helperId) {
+      return res.status(400).json({ success: false, message: 'You cannot hire yourself' });
+    }
+
     const existing = await HireRequest.findOne({
       recruiterId: req.user.id,
       helperId,
@@ -91,10 +95,14 @@ const markComplete = async (req, res) => {
     const request = await HireRequest.findById(req.params.id);
     if (!request) return res.status(404).json({ success: false, message: 'Request not found' });
 
+    if (request.status === 'completed' || request.status === 'rated') {
+      return res.status(400).json({ success: false, message: 'Job has already been marked as completed' });
+    }
+
     const isRecruiter = request.recruiterId.toString() === req.user.id;
     const isHelper = request.helperId.toString() === req.user.id;
 
-    if (!isRecruiter && !isHelper) {
+    if (!isRecruiter && !isHelper && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized to modify this job' });
     }
 
@@ -104,7 +112,7 @@ const markComplete = async (req, res) => {
     // Both sides confirmed → mark as completed
     if (request.helperMarkedDone && request.recruiterMarkedDone) {
       request.status = 'completed';
-      // Update helper stats
+      // Update helper stats once
       await JobSeekerProfile.findOneAndUpdate(
         { userId: request.helperId },
         { $inc: { totalJobs: 1, totalEarnings: request.agreedAmount || 0 } }
@@ -126,6 +134,14 @@ const getHireRequest = async (req, res) => {
       .populate('recruiterId', 'name profilePic email phone')
       .populate('helperId', 'name profilePic email phone');
     if (!request) return res.status(404).json({ success: false, message: 'Not found' });
+
+    const isRecruiter = request.recruiterId?._id?.toString() === req.user.id || request.recruiterId?.toString() === req.user.id;
+    const isHelper = request.helperId?._id?.toString() === req.user.id || request.helperId?.toString() === req.user.id;
+
+    if (!isRecruiter && !isHelper && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized to view this hire request' });
+    }
+
     res.json({ success: true, request });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });

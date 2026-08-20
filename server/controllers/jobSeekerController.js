@@ -41,19 +41,25 @@ const searchHelpers = async (req, res) => {
     const { category, city, page = 1, limit = 12 } = req.query;
     const filter = {};
     if (category) filter.category = { $in: [category] };
-    if (city) filter.city = { $regex: city, $options: 'i' };
+    if (city) {
+      const safeCity = String(city).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.city = { $regex: safeCity, $options: 'i' };
+    }
 
-    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const safePage = Math.max(1, parseInt(page) || 1);
+    const safeLimit = Math.min(100, Math.max(1, parseInt(limit) || 12));
+    const skip = (safePage - 1) * safeLimit;
+
     const [profiles, total] = await Promise.all([
       JobSeekerProfile.find(filter)
         .populate('userId', 'name email profilePic')
         .sort({ avgRating: -1, totalJobs: -1 })
         .skip(skip)
-        .limit(parseInt(limit)),
+        .limit(safeLimit),
       JobSeekerProfile.countDocuments(filter),
     ]);
 
-    res.json({ success: true, profiles, total, page: parseInt(page), pages: Math.ceil(total / parseInt(limit)) });
+    res.json({ success: true, profiles, total, page: safePage, pages: Math.ceil(total / safeLimit) });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
   }

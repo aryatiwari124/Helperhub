@@ -17,18 +17,18 @@ export default function AdminDashboard() {
   const loadAdminData = async () => {
     setLoading(true);
     try {
-      const [sRes, uRes, cRes, jRes] = await Promise.all([
+      const [sRes, uRes, cRes, jRes] = await Promise.allSettled([
         api.get('/admin/stats'),
         api.get('/admin/users'),
         api.get('/admin/categories'),
         api.get('/admin/jobs'),
       ]);
-      setStats(sRes.data.stats);
-      setUsers(uRes.data.users || []);
-      setCategories(cRes.data.categories || []);
-      setJobs(jRes.data.jobs || []);
+      if (sRes.status === 'fulfilled') setStats(sRes.value.data.stats);
+      if (uRes.status === 'fulfilled') setUsers(uRes.value.data.users || []);
+      if (cRes.status === 'fulfilled') setCategories(cRes.value.data.categories || []);
+      if (jRes.status === 'fulfilled') setJobs(jRes.value.data.jobs || []);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to load admin data:', err);
     } finally {
       setLoading(false);
     }

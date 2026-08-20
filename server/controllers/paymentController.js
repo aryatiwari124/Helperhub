@@ -10,7 +10,7 @@ const createCheckout = async (req, res) => {
 
     const hireRequest = await HireRequest.findById(hireRequestId).populate('helperId', 'name');
     if (!hireRequest) return res.status(404).json({ success: false, message: 'Hire request not found' });
-    if (hireRequest.recruiterId.toString() !== req.user.id) {
+    if (hireRequest.recruiterId.toString() !== req.user.id && req.user.role !== 'admin') {
       return res.status(403).json({ success: false, message: 'Not authorized' });
     }
     if (hireRequest.status !== 'accepted') {
@@ -21,13 +21,19 @@ const createCheckout = async (req, res) => {
 
     // If Stripe not configured, simulate payment (demo mode)
     if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY === 'sk_test_placeholder') {
-      const payment = await Payment.create({
-        hireRequestId,
-        recruiterId: req.user.id,
-        helperId: hireRequest.helperId._id,
-        amount,
-        status: 'held',
-      });
+      let payment = await Payment.findOne({ hireRequestId });
+      if (!payment) {
+        payment = await Payment.create({
+          hireRequestId,
+          recruiterId: req.user.id,
+          helperId: hireRequest.helperId._id,
+          amount,
+          status: 'held',
+        });
+      } else {
+        payment.status = 'held';
+        await payment.save();
+      }
       await HireRequest.findByIdAndUpdate(hireRequestId, { status: 'paid' });
       return res.json({ success: true, demo: true, payment, message: 'Demo payment simulated successfully' });
     }
@@ -71,11 +77,16 @@ const createCheckout = async (req, res) => {
 const confirmPayment = async (req, res) => {
   try {
     const { hireRequestId } = req.params;
-    const payment = await Payment.findOneAndUpdate(
-      { hireRequestId },
-      { status: 'held' },
-      { new: true }
-    );
+    const payment = await Payment.findOne({ hireRequestId });
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment record not found' });
+
+    if (payment.recruiterId.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized to confirm payment for this booking' });
+    }
+
+    payment.status = 'held';
+    await payment.save();
+
     await HireRequest.findByIdAndUpdate(hireRequestId, { status: 'paid' });
     res.json({ success: true, payment });
   } catch (error) {
@@ -88,11 +99,22 @@ const confirmPayment = async (req, res) => {
 const releasePayment = async (req, res) => {
   try {
     const { hireRequestId } = req.params;
-    const payment = await Payment.findOneAndUpdate(
-      { hireRequestId },
-      { status: 'released' },
-      { new: true }
-    );
+    const payment = await Payment.findOne({ hireRequestId });
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment record not found' });
+
+    if (payment.recruiterId.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Only the recruiter or admin can release escrow payment' });
+    }
+
+    const hireRequest = await HireRequest.findById(hireRequestId);
+    if (!hireRequest) return res.status(404).json({ success: false, message: 'Hire request not found' });
+
+    if (hireRequest.status !== 'completed' && hireRequest.status !== 'rated') {
+      return res.status(400).json({ success: false, message: 'Job must be marked as completed before payment release' });
+    }
+
+    payment.status = 'released';
+    await payment.save();
     res.json({ success: true, payment, message: 'Payment released to helper' });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });
@@ -104,6 +126,12 @@ const releasePayment = async (req, res) => {
 const getPayment = async (req, res) => {
   try {
     const payment = await Payment.findOne({ hireRequestId: req.params.hireRequestId });
+    if (!payment) return res.status(404).json({ success: false, message: 'Payment record not found' });
+
+    if (payment.recruiterId.toString() !== req.user.id && payment.helperId.toString() !== req.user.id && req.user.role !== 'admin') {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
+    }
+
     res.json({ success: true, payment });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Server error' });

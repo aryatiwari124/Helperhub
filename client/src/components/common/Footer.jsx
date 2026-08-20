@@ -39,7 +39,7 @@ export default function Footer() {
           {/* Company */}
           <div className="footer-section">
             <h4>{t('footer_company')}</h4>
-            <Link to="/about">{t('footer_about')}</Link>
+            <a href="/#how-it-works">{t('footer_about')}</a>
             <Link to="/helpers">{t('nav_find')}</Link>
             <Link to="/auth?mode=signup&role=jobseeker">{t('cta_work_btn')}</Link>
             <a href="#">{t('footer_blog')}</a>

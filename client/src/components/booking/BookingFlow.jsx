@@ -13,17 +13,20 @@ const BOOKED_SLOTS = [2, 6]; // indices that are unavailable
 
 // Generate next 14 days
 function getNext14Days() {
+  const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const days = [];
-  const dayNames = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   for (let i = 0; i < 14; i++) {
     const d = new Date();
     d.setDate(d.getDate() + i);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
     days.push({
       label: i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : dayNames[d.getDay()],
       date: d.getDate(),
       month: monthNames[d.getMonth()],
-      full: d.toISOString().split('T')[0],
+      full: `${year}-${month}-${day}`,
       display: `${dayNames[d.getDay()]}, ${d.getDate()} ${monthNames[d.getMonth()]}`,
     });
   }
@@ -60,7 +63,7 @@ export default function BookingFlow({ helper, profile, onClose, onSuccess }) {
     if (step === 1) return !!selectedTime;
     if (step === 2) return jobTitle.trim() && address.trim();
     if (step === 3) return true;
-    if (step === 4) return card.number.length >= 16 && card.expiry && card.cvv.length >= 3 && card.name;
+    if (step === 4) return card.number.replace(/\D/g, '').length >= 16 && card.expiry && card.cvv.length >= 3 && card.name;
     return false;
   };
 
@@ -78,6 +81,10 @@ export default function BookingFlow({ helper, profile, onClose, onSuccess }) {
       const hireId = hireRes.data.request?._id;
       if (hireId) {
         const payRes = await api.post('/payment/checkout', { hireRequestId: hireId });
+        if (payRes.data.checkoutUrl && !payRes.data.demo) {
+          window.location.href = payRes.data.checkoutUrl;
+          return;
+        }
         if (payRes.data.demo || payRes.data.checkoutUrl) {
           setConfirmedJobId(hireId);
           setConfirmed(true);
@@ -93,7 +100,8 @@ export default function BookingFlow({ helper, profile, onClose, onSuccess }) {
   };
 
   const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files || []);
+    const rawFiles = e.target?.files || e.dataTransfer?.files || e.files || [];
+    const files = Array.from(rawFiles);
     files.forEach(f => {
       const reader = new FileReader();
       reader.onload = (ev) => setImages(prev => [...prev, { name: f.name, src: ev.target.result }]);

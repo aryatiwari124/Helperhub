@@ -61,9 +61,9 @@ export default function WorkerCard({ profile, index = 0, selected, onSelect, onB
           <p className="wc-profession">{CATEGORY_EMOJIS[mainCategory]} {mainCategory}</p>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4, flexWrap: 'wrap' }}>
-            <StarRow rating={profile.avgRating || 4.8} />
-            <span className="wc-rating-num">{(profile.avgRating || 4.8).toFixed(1)}</span>
-            <span className="wc-jobs-done">({profile.totalJobs || 24} {t('landing_card_jobs', 'jobs')})</span>
+            <StarRow rating={profile.avgRating ?? 4.8} />
+            <span className="wc-rating-num">{(profile.avgRating ?? 4.8).toFixed(1)}</span>
+            <span className="wc-jobs-done">({profile.totalJobs ?? 0} {t('landing_card_jobs', 'jobs')})</span>
           </div>
         </div>
 

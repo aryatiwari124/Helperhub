@@ -30,30 +30,41 @@ export default function JobSeekerDashboard() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [pRes, rRes, jRes] = await Promise.all([
+      const [pRes, rRes, jRes] = await Promise.allSettled([
         api.get('/jobseeker/profile/me'),
         api.get('/hire/helper'),
         api.get('/jobpost'),
       ]);
-      const p = pRes.data.profile;
-      setProfile(p);
-      if (p) {
-        setProfileForm({
-          category: p.category || [],
-          bio: p.bio || '',
-          city: p.city || '',
-          rate: p.rate || '',
-          rateType: p.rateType || 'hourly',
-          availability: p.availability || '',
-          yearsExperience: p.yearsExperience || '',
-        });
+
+      if (pRes.status === 'fulfilled') {
+        const p = pRes.value.data.profile;
+        setProfile(p);
+        if (p) {
+          setProfileForm({
+            category: p.category || [],
+            bio: p.bio || '',
+            city: p.city || '',
+            rate: p.rate || '',
+            rateType: p.rateType || 'hourly',
+            availability: p.availability || '',
+            yearsExperience: p.yearsExperience || '',
+          });
+        } else {
+          setEditMode(true);
+        }
       } else {
         setEditMode(true);
       }
-      setRequests(rRes.data.requests || []);
-      setOpenJobs(jRes.data.jobs || []);
+
+      if (rRes.status === 'fulfilled') {
+        setRequests(rRes.value.data.requests || []);
+      }
+
+      if (jRes.status === 'fulfilled') {
+        setOpenJobs(jRes.value.data.jobs || []);
+      }
     } catch (err) {
-      console.error(err);
+      console.error('Failed to load dashboard data:', err);
     } finally {
       setLoading(false);
     }

@@ -104,7 +104,7 @@ export default function Navbar() {
             <Link to="/helpers" className="navbar-link">
               <Search size={15} /> {t('nav_find')}
             </Link>
-            <Link to="/about" className="navbar-link">{t('nav_how')}</Link>
+            <a href="/#how-it-works" className="navbar-link">{t('nav_how')}</a>
           </div>
 
           {/* ── RIGHT ACTIONS ── */}
@@ -196,9 +196,9 @@ export default function Navbar() {
                     ))}
                   </div>
                   <div className="notif-footer">
-                    <Link to="/notifications" onClick={() => setNotifOpen(false)}>
-                      {t('nav_view_all')}
-                    </Link>
+                    <button className="notif-mark-all" style={{ width: '100%', textAlign: 'center' }} onClick={() => { markAllRead(); setNotifOpen(false); }}>
+                      {t('nav_mark_all_read')}
+                    </button>
                   </div>
                 </div>
               )}

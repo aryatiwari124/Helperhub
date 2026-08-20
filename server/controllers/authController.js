@@ -41,6 +41,12 @@ const signup = async (req, res) => {
     // Send OTP email (or log to console in dev)
     const emailResult = await sendOtpEmail(email, otp);
 
+    if (!emailResult.success && !emailResult.dev) {
+      await User.findByIdAndDelete(user._id);
+      await OTP.deleteMany({ email });
+      return res.status(502).json({ success: false, message: 'Failed to send verification email. Please try again later.' });
+    }
+
     const isDev = !process.env.EMAIL_USER || process.env.EMAIL_USER === 'your_email@gmail.com' || emailResult?.dev;
 
     res.status(201).json({
@@ -166,22 +172,17 @@ const googleAuth = async (req, res) => {
     const clientId = process.env.GOOGLE_CLIENT_ID;
 
     // Cryptographic verification with google-auth-library
-    if (clientId && clientId !== 'your_google_client_id') {
-      const { OAuth2Client } = require('google-auth-library');
-      const client = new OAuth2Client(clientId);
-      const ticket = await client.verifyIdToken({
-        idToken: googleToken,
-        audience: clientId,
-      });
-      payload = ticket.getPayload();
-    } else {
-      // Decode JWT with structure verification if client ID is in demo configuration
-      const parts = googleToken.split('.');
-      if (parts.length !== 3) {
-        return res.status(400).json({ success: false, message: 'Invalid Google token structure' });
-      }
-      payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+    if (!clientId || clientId === 'your_google_client_id') {
+      return res.status(503).json({ success: false, message: 'Google authentication is not configured on this server.' });
     }
+
+    const { OAuth2Client } = require('google-auth-library');
+    const client = new OAuth2Client(clientId);
+    const ticket = await client.verifyIdToken({
+      idToken: googleToken,
+      audience: clientId,
+    });
+    payload = ticket.getPayload();
 
     if (!payload || !payload.email) {
       return res.status(400).json({ success: false, message: 'Could not extract valid user profile from Google token' });

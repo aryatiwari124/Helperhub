@@ -339,6 +339,10 @@ export default function HelperProfilePage() {
           helper={helperUser}
           profile={profile}
           onClose={() => setShowHireModal(false)}
+          onSuccess={() => {
+            setShowHireModal(false);
+            loadProfile();
+          }}
         />
       )}
 

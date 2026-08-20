@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -57,7 +58,7 @@ function getWorkerCoords(index) {
     [-0.04, -0.02], [0.02, 0.05],
   ];
   const off = offsets[index % offsets.length] || [0, 0];
-  return [CITY_CENTER[0] + off[0] + (Math.random() * spread * 0.1), CITY_CENTER[1] + off[1] + (Math.random() * spread * 0.1)];
+  return [CITY_CENTER[0] + off[0], CITY_CENTER[1] + off[1]];
 }
 
 // Sub-component to fly map to worker
@@ -76,6 +77,7 @@ const CATEGORIES = ['All', 'Plumber', 'Electrician', 'Carpenter', 'AC Technician
 
 export default function BrowseHelpersPage() {
   const { t } = useLanguage();
+  const [searchParams] = useSearchParams();
   const [profiles, setProfiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -86,6 +88,13 @@ export default function BrowseHelpersPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [category, setCategory] = useState('All');
   const [workerCoords, setWorkerCoords] = useState({});
+
+  useEffect(() => {
+    const catParam = searchParams.get('category');
+    const qParam = searchParams.get('q');
+    if (catParam) setCategory(catParam);
+    if (qParam) setSearch(qParam);
+  }, [searchParams]);
 
   // Filters state
   const [filters, setFilters] = useState({

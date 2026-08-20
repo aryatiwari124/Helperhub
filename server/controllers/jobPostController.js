@@ -63,10 +63,14 @@ const getJobPost = async (req, res) => {
 const updateJobStatus = async (req, res) => {
   try {
     const { status } = req.body;
+    const allowedStatuses = ['open', 'assigned', 'in_progress', 'completed', 'cancelled'];
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({ success: false, message: 'Invalid job status' });
+    }
     const job = await JobPost.findOneAndUpdate(
       { _id: req.params.id, recruiterId: req.user.id },
       { status },
-      { new: true }
+      { new: true, runValidators: true }
     );
     if (!job) return res.status(404).json({ success: false, message: 'Job not found' });
     res.json({ success: true, job });

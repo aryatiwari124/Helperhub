@@ -4,7 +4,7 @@ const { SYSTEM_PROMPT, buildUserPrompt } = require('../prompts/costEstimation');
 // OpenRouter provides an OpenAI-compatible endpoint that routes to Claude and other models.
 // Docs: https://openrouter.ai/docs
 const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const OPENROUTER_MODEL = 'anthropic/claude-sonnet-4-5'; // verified slug at openrouter.ai/models
+const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-3.5-sonnet';
 
 /**
  * Call the OpenRouter Chat Completions API (OpenAI-compatible format).
@@ -72,6 +72,10 @@ function callOpenRouterAPI(systemPrompt, userMessage) {
       });
     });
 
+    req.setTimeout(15000, () => {
+      req.destroy(new Error('OpenRouter API request timed out after 15 seconds'));
+    });
+
     req.on('error', (e) => reject(new Error('Network error calling OpenRouter: ' + e.message)));
     req.write(body);
     req.end();
@@ -87,7 +91,13 @@ function callOpenRouterAPI(systemPrompt, userMessage) {
  */
 function parseAndValidateEstimate(rawText) {
   // Strip any accidental markdown fences the model may have added
-  const cleaned = rawText.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+  let cleaned = (rawText || '').trim();
+  const match = cleaned.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+  if (match) {
+    cleaned = match[1];
+  } else {
+    cleaned = cleaned.replace(/```json\s*/gi, '').replace(/```\s*/gi, '').trim();
+  }
 
   let parsed;
   try {

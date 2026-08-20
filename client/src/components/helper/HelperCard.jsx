@@ -83,12 +83,12 @@ export default function HelperCard({ profile, index = 0, onHire }) {
             </p>
 
             <div className="flex items-center gap-2 mt-1">
-              <StarRating rating={profile.avgRating || 4.8} />
+              <StarRating rating={profile.avgRating ?? 4.8} />
               <span className="pro-rating-score">
-                {profile.avgRating?.toFixed(1) || '4.8'}
+                {(profile.avgRating ?? 4.8).toFixed(1)}
               </span>
               <span className="text-xs text-muted font-semibold">
-                ({profile.totalJobs || 24} {t('landing_card_jobs', 'jobs')})
+                ({profile.totalJobs ?? 0} {t('landing_card_jobs', 'jobs')})
               </span>
             </div>
           </div>

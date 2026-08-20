@@ -38,8 +38,9 @@ export default function JobDetailPage() {
 
   useEffect(() => { loadJob(); }, [id]);
 
-  const isRecruiter = user?.id === req?.recruiterId?._id || user?.id === req?.recruiterId;
-  const isHelper = user?.id === req?.helperId?._id || user?.id === req?.helperId;
+  const userId = user?.id || user?._id;
+  const isRecruiter = userId && (userId === req?.recruiterId?._id || userId === req?.recruiterId);
+  const isHelper = userId && (userId === req?.helperId?._id || userId === req?.helperId);
 
   const handlePay = async () => {
     setPaying(true);
