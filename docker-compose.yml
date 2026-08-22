@@ -7,14 +7,15 @@ services:
       - mongo-data:/data/db
 
   app:
-    build: .
+    build:
+      context: .
+      args:
+        VITE_GOOGLE_CLIENT_ID: ${VITE_GOOGLE_CLIENT_ID:-}
     ports:
       - "5000:5000"
-      - "5173:5173"
     environment:
       MONGO_URI: mongodb://mongo:27017/helperhub
       CLIENT_URL: http://localhost:5173
-      VITE_API_URL: http://localhost:5000/api/v1
     depends_on:
       - mongo
 
