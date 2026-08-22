@@ -44,6 +44,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const mongoose = require('mongoose');
+const path = require('path');
 
 // DB readiness check middleware
 app.use('/api/v1', (req, res, next) => {
@@ -71,6 +72,15 @@ app.use('/api/v1/payment', paymentRoutes);
 app.use('/api/v1/review', reviewRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/estimate', estimateRoutes);
+
+const clientDistPath = path.join(__dirname, '..', 'client', 'dist');
+app.use(express.static(clientDistPath));
+app.use((req, res, next) => {
+  if (req.method === 'GET' && !req.path.startsWith('/api/')) {
+    return res.sendFile(path.join(clientDistPath, 'index.html'));
+  }
+  next();
+});
 
 // 404 handler
 app.use((req, res) => {
