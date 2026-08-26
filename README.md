@@ -88,3 +88,5 @@ The backend runs on `http://localhost:5000`, the frontend on `http://localhost:5
 
 ## Documentation
 See the [`docs/`](./docs) folder for the full PRD, HLD, LLD, and TRD, plus implementation evidence for the Kalvium Project Assessor rubric in [`docs/evidence/`](./docs/evidence).
+
+The individual assessment topics are documented in [`docs/topics/`](./docs/topics/README.md), including LLM integration, prompt engineering, structured outputs, middleware, secrets management, JavaScript fundamentals, MongoDB, relational design, and SQL JOINs.

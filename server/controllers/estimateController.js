@@ -1,10 +1,11 @@
 const https = require('https');
 const { SYSTEM_PROMPT, buildUserPrompt } = require('../prompts/costEstimation');
+const { estimateSchema, validateEstimate } = require('../schemas/estimateSchema');
+const { getConfig } = require('../config/env');
 
 // OpenRouter provides an OpenAI-compatible endpoint that routes to Claude and other models.
 // Docs: https://openrouter.ai/docs
-const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
-const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-3.5-sonnet';
+const { apiKey: OPENROUTER_API_KEY, model: OPENROUTER_MODEL, apiUrl: OPENROUTER_API_URL } = getConfig().llm;
 
 /**
  * Call the OpenRouter Chat Completions API (OpenAI-compatible format).
@@ -24,8 +25,7 @@ const OPENROUTER_MODEL = process.env.OPENROUTER_MODEL || 'anthropic/claude-3.5-s
  */
 function callOpenRouterAPI(systemPrompt, userMessage) {
   return new Promise((resolve, reject) => {
-    const apiKey = process.env.OPENROUTER_API_KEY;
-    if (!apiKey || apiKey === 'your_openrouter_api_key') {
+    if (!OPENROUTER_API_KEY || OPENROUTER_API_KEY === 'your_openrouter_api_key') {
       return reject(new Error('OPENROUTER_API_KEY is not configured. Get a free key at openrouter.ai/keys'));
     }
 
@@ -33,6 +33,7 @@ function callOpenRouterAPI(systemPrompt, userMessage) {
     const body = JSON.stringify({
       model: OPENROUTER_MODEL,
       max_tokens: 512,
+      response_format: { type: 'json_schema', json_schema: { name: 'cost_estimate', strict: true, schema: estimateSchema } },
       messages: [
         { role: 'system', content: systemPrompt },
         { role: 'user',   content: userMessage  },
@@ -43,7 +44,7 @@ function callOpenRouterAPI(systemPrompt, userMessage) {
       method: 'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': `Bearer ${apiKey}`,          // OpenAI-style Bearer token auth
+        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
         'HTTP-Referer':  process.env.CLIENT_URL || 'http://localhost:5173', // OpenRouter attribution
         'X-Title':       'HelperHub',                 // OpenRouter attribution
         'Content-Length': Buffer.byteLength(body),
@@ -106,20 +107,7 @@ function parseAndValidateEstimate(rawText) {
     throw new Error('LLM returned non-JSON output: ' + cleaned.slice(0, 200));
   }
 
-  const { min_cost, max_cost, currency, reasoning, confidence } = parsed;
-
-  if (typeof min_cost !== 'number' || typeof max_cost !== 'number') {
-    throw new Error('min_cost and max_cost must be numbers');
-  }
-  if (min_cost < 0 || max_cost < 0) throw new Error('Costs cannot be negative');
-  if (min_cost > max_cost) throw new Error('min_cost must be <= max_cost');
-  if (currency !== 'INR') throw new Error('currency must be INR');
-  if (!reasoning || typeof reasoning !== 'string') throw new Error('reasoning is required');
-  if (!['low', 'medium', 'high'].includes(confidence)) {
-    throw new Error('confidence must be low, medium, or high');
-  }
-
-  return { min_cost: Math.round(min_cost), max_cost: Math.round(max_cost), currency, reasoning, confidence };
+  return validateEstimate(parsed);
 }
 
 // @desc  AI-powered cost estimation for a home service job
@@ -169,4 +157,4 @@ const getCostEstimate = async (req, res) => {
   }
 };
 
-module.exports = { getCostEstimate };
+module.exports = { getCostEstimate, parseAndValidateEstimate };
